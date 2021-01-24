@@ -1,5 +1,5 @@
 /**
- *  @file TEST.h
+ *  @file I2S_Port.h
  *
  *  @date 2021-01-21
  *
@@ -9,8 +9,8 @@
  *  
  *  @version V1.0
  */
-#ifndef TEST_H
-#define TEST_H
+#ifndef I2S_PORT_H
+#define I2S_PORT_H
 #ifdef __cplusplus ///<use C compiler
 extern "C" {
 #endif
@@ -33,8 +33,11 @@ extern "C" {
 /** Exported macros-----------------------------------------------------------*/
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
-void i2s_test_init(void);
-void i2s_test(void);
+
+/*I2S接口初始化*/
+void I2S_Port_Init(void);
+/*I2S接口启动*/
+void I2S_Port_Start(void);
 
 #ifdef __cplusplus ///<end extern c
 }

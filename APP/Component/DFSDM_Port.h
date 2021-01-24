@@ -33,8 +33,12 @@ extern "C" {
 /** Exported macros-----------------------------------------------------------*/
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
-void df_init(void);
-void df_run(void);
+
+/*DFSDM初始化*/
+void DFSDM_Port_Init(void);
+/*DFSDM启动PDM转换*/
+void DFSDM_Port_Start(void);
+
 #ifdef __cplusplus ///<end extern c
 }
 #endif

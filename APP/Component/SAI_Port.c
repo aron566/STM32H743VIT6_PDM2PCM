@@ -381,10 +381,7 @@ void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai)
   */
 void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef *hsai)
 {
-  if(hsai->Instance == SAI1_Block_A)
-  {
-
-  }
+  UNUSED(hsai);
 }
 
 /**

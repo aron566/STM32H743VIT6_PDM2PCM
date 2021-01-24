@@ -216,7 +216,7 @@ static void Algorithm_Old_Process_Start(void)
 *
 ********************************************************************************
 */
-volatile uint8_t Rec_Full_Flag = 0;
+
 /**
   ******************************************************************
   * @brief   播放音频任务处理
@@ -235,12 +235,8 @@ void User_Main_PlayTask_Process_Loop(void)
     return;
   }
   
-//  if(Rec_Full_Flag == 0)
-//  {
-//    return;
-//  }
   SAI_Can_Read_Data_Flag = 0;
-  Rec_Full_Flag = 0;
+
   /*转换PDM数据*/
   extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[8];
   
@@ -312,7 +308,7 @@ void User_Main_Task_Process_Loop(void)
 //    Algorithm_Old_Process_Start();
     
 //    User_Main_PlayTask_Process_Loop();
-    df_run();
+    DFSDM_Port_Start();
 
   }
   /*never return*/
@@ -334,18 +330,18 @@ void User_Main_Task_Init(void)
   Uart_Port_Init();
 
   /*定时器初始化*/
-//  Timer_Port_Init();
+  Timer_Port_Init();
   
   /*Sai操作初始化*/
   Sai_Port_Init();
   
   /*DFSDM初始化*/
-  df_init();
+  DFSDM_Port_Init();
   
   /*USB初始化*/
   UAC_Init();
   
-//  i2s_test_init();
+//  I2S_Port_Init();
   /*other initialization task code*/
 }
 

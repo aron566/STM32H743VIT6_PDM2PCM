@@ -9,7 +9,11 @@
  *
  *  @brief DFSDM操作接口：PDM转PCM
  *
- *  @details 1、
+ *  @details 1、通道0和通道1指数据接入，物理连接-->共用通道1口-->分离到各自滤波器转出PCM数据（滤波器0接通道0，滤波器1接通道1）
+ *           2、通道2和通道3指数据接入，物理连接-->共用通道3口-->分离到各自滤波器转出PCM数据（滤波器2接通道2，滤波器3接通道3）
+ *           3、通道4和通道5指数据接入，物理连接-->共用通道5口-->分离到各自滤波器转出PCM数据（无滤波器可用）
+ *           4、通道6和通道7指数据接入，物理连接-->共用通道7口-->分离到各自滤波器转出PCM数据（无滤波器可用）
+ *           5、采样率 = 时钟源/分频值/(Fosr*Iosr) == 16khz = 2048000hz/2/(64*1)
  *
  *  @version V1.0
  */
@@ -57,16 +61,6 @@ static uint8_t DmaRecBuffCplt_3      = 0;
 /*microphone 4*/
 static uint8_t DmaRecHalfBuffCplt_4  = 0;
 static uint8_t DmaRecBuffCplt_4      = 0;
-
-#define SAMPLE_FREQ       16000
-#define BYTE_PER_SAMPLE   2
-#define MICROPHEN_NUMBER  2
-#define FRAME_NUMBER      2
-//16bit sample resolution
-#define BUF_LENGTH        (SAMPLE_FREQ/1000*MICROPHEN_NUMBER*FRAME_NUMBER)
-/* Buffer 分配 */
-int16_t Buf_Mic0[BUF_LENGTH];
-int16_t Buf_Mic1[BUF_LENGTH];
 
 /** Private function prototypes ----------------------------------------------*/
 
@@ -155,7 +149,17 @@ void HAL_DFSDM_FilterRegConvCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_filt
   }
 }
 
-void df_run(void)
+/**
+  ******************************************************************
+  * @brief   DFSDM启动PDM转换
+  * @param   [in]None.
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-22
+  ******************************************************************
+  */
+void DFSDM_Port_Start(void)
 {
   if((DmaRecHalfBuffCplt_1 == 0) && (DmaRecBuffCplt_1 == 0))
   {
@@ -192,16 +196,38 @@ void df_run(void)
   }
 }
 
-void df_init(void)
+/**
+  ******************************************************************
+  * @brief   DFSDM初始化
+  * @param   [in]None.
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-22
+  ******************************************************************
+  */
+void DFSDM_Port_Init(void)
 {
-	/* 启动采样，在初始化完成后调用 */	
+	/*启动通道0采样*/	
   if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter0, (int16_t *)Pdm2Pcm_ChannelBuf[0].PCM_Buf, PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
   {
     Error_Handler();
   }
   
-  /* 启动采样，在初始化完成后调用 */	
-//  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter1, (int16_t *)(Pdm2Pcm_ChannelBuf[0].PCM_Buf+PCM_ONE_SAMPLE_NUM), PCM_ONE_SAMPLE_NUM) == HAL_ERROR)
+  /*启动通道1采样*/		
+//  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter1, (int16_t *)(Pdm2Pcm_ChannelBuf[1].PCM_Buf+PCM_ONE_SAMPLE_NUM), PCM_ONE_SAMPLE_NUM) == HAL_ERROR)
+//  {
+//    Error_Handler();
+//  }
+  
+  /*启动通道2采样*/	
+//  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter2, (int16_t *)(Pdm2Pcm_ChannelBuf[2].PCM_Buf+PCM_ONE_SAMPLE_NUM), PCM_ONE_SAMPLE_NUM) == HAL_ERROR)
+//  {
+//    Error_Handler();
+//  }
+  
+  /*启动通道3采样*/	
+//  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter3, (int16_t *)(Pdm2Pcm_ChannelBuf[3].PCM_Buf+PCM_ONE_SAMPLE_NUM), PCM_ONE_SAMPLE_NUM) == HAL_ERROR)
 //  {
 //    Error_Handler();
 //  }

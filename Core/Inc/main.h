@@ -33,13 +33,6 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "user_main.h"
-#include "SAI_Port.h"
-#include "PDM_Datacov.h"
-#include "UART_Port.h"
-#include "uac_init.h"
-#include "TEST.h"
-#include "Timer_Port.h"
-#include "DFSDM_Port.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -65,10 +58,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define DATA_IN_Pin GPIO_PIN_12
-#define DATA_IN_GPIO_Port GPIOE
-#define CLOCK_OUT_Pin GPIO_PIN_13
-#define CLOCK_OUT_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

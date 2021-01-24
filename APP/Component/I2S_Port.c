@@ -1,5 +1,5 @@
 /**
- *  @file TEST.c
+ *  @file I2S_Port.c
  *
  *  @date 2021-01-15
  *
@@ -18,7 +18,7 @@ extern "C" {
 #endif
 /** Includes -----------------------------------------------------------------*/
 /* Private includes ----------------------------------------------------------*/
-#include "TEST.h"
+#include "I2S_Port.h"
 #include "main.h"
 #include "usbd_audio.h"
 /** Private typedef ----------------------------------------------------------*/
@@ -27,8 +27,7 @@ extern "C" {
 
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
-extern I2S_HandleTypeDef hi2s2;
-extern I2S_HandleTypeDef hi2s3;
+extern I2S_HandleTypeDef hi2s1;
 extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
 extern volatile uint8_t SAI_Can_Read_Data_Flag;
@@ -83,12 +82,35 @@ uint16_t FifoRead() {
 *
 ********************************************************************************
 */
-void i2s_test_init(void)
-{
-  HAL_I2S_Receive_DMA(&hi2s2, (uint16_t *)Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf, PDM_TWO_SAMPLE_NUM);
+void HAL_I2S_TxHalfCpltCallback (I2S_HandleTypeDef *hi2s) {
+	txstate = 1;
 }
 
-void i2s_test(void)
+void HAL_I2S_TxCpltCallback (I2S_HandleTypeDef *hi2s) {
+	txstate = 2;
+}
+
+void HAL_I2S_RxHalfCpltCallback (I2S_HandleTypeDef *hi2s) {
+  SAI_Can_Read_Data_Flag = 1;
+  SAI_Receive_Complete_Flag = 0;
+}
+
+void HAL_I2S_RxCpltCallback (I2S_HandleTypeDef *hi2s) {
+  SAI_Can_Read_Data_Flag = 1;
+  SAI_Receive_Complete_Flag = 1;
+}
+
+/**
+  ******************************************************************
+  * @brief   I2S接口启动
+  * @param   [in]None
+  * @return  None
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-24
+  ******************************************************************
+  */
+void I2S_Port_Start(void)
 {
     if (rxstate==1) {
       PDM_To_PCM_Stream(&pdmRxBuf[0],&MidBuffer[0]);
@@ -145,22 +167,19 @@ void i2s_test(void)
     }
 }
 
-void HAL_I2S_TxHalfCpltCallback (I2S_HandleTypeDef *hi2s) {
-	txstate = 1;
-}
-
-void HAL_I2S_TxCpltCallback (I2S_HandleTypeDef *hi2s) {
-	txstate = 2;
-}
-
-void HAL_I2S_RxHalfCpltCallback (I2S_HandleTypeDef *hi2s) {
-  SAI_Can_Read_Data_Flag = 1;
-  SAI_Receive_Complete_Flag = 0;
-}
-
-void HAL_I2S_RxCpltCallback (I2S_HandleTypeDef *hi2s) {
-  SAI_Can_Read_Data_Flag = 1;
-  SAI_Receive_Complete_Flag = 1;
+/**
+  ******************************************************************
+  * @brief   I2S接口初始化
+  * @param   [in]None
+  * @return  None
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-24
+  ******************************************************************
+  */
+void I2S_Port_Init(void)
+{
+  HAL_I2S_Receive_DMA(&hi2s1, (uint16_t *)Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf, PDM_TWO_SAMPLE_NUM);
 }
 
 #ifdef __cplusplus ///<end extern c

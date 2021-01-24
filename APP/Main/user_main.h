@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 /** Includes -----------------------------------------------------------------*/
-#include <stdint.h> /**< nedd definition of uint8_t */
+#include <stdint.h> /**< need definition of uint8_t */
 #include <stddef.h> /**< need definition of NULL    */
 #include <stdbool.h>/**< need definition of BOOL    */
 #include <stdio.h>  /**< if need printf             */
@@ -23,7 +23,13 @@ extern "C" {
 #include <string.h>
 #include <limits.h> /**< need variable max value    */
 /** Private includes ---------------------------------------------------------*/
-
+#include "SAI_Port.h"
+#include "PDM_Datacov.h"
+#include "UART_Port.h"
+#include "uac_init.h"
+#include "I2S_Port.h"
+#include "Timer_Port.h"
+#include "DFSDM_Port.h"
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/
@@ -34,13 +40,16 @@ extern "C" {
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 
+/*中断向量表拷贝到D加速区*/
 void User_InterruptVectorTable_Move(void);
+/*初始化各模块功能*/
 void User_Main_Task_Init(void);
+/*任务处理循环*/
 void User_Main_Task_Process_Loop(void);
+/*播放音频任务处理*/
 void User_Main_PlayTask_Process_Loop(void);
 /*存储来自音频设备数据*/
 void User_Audio_Channel_Data_Save(uint16_t *data, uint32_t len);
-
 
 #ifdef __cplusplus ///<end extern c
 }
