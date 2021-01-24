@@ -20,7 +20,8 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 #include "I2S_Port.h"
 #include "main.h"
-#include "usbd_audio.h"
+#include "USB_Audio_Port.h"
+#include "usbd_audio_if.h"
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
@@ -28,21 +29,10 @@ extern "C" {
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 extern I2S_HandleTypeDef hi2s1;
-extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
+extern uint16_t PDM_Buffer[AUDIO_CHANNELS*AUDIO_SAMPLING_FREQUENCY/1000*64/8];
 extern volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
-extern volatile uint8_t SAI_Can_Read_Data_Flag;
 /** Private variables --------------------------------------------------------*/
-uint16_t txBuf[128];
-uint16_t pdmRxBuf[128];
-uint16_t MidBuffer[16];
-uint8_t txstate = 0;
-uint8_t rxstate = 0;
-
-
-uint16_t fifobuf[256];
-uint8_t fifo_w_ptr = 0;
-uint8_t fifo_r_ptr = 0;
-uint8_t fifo_read_enabled = 0;
+static uint16_t PCM_Buffer[AUDIO_CHANNELS*AUDIO_SAMPLING_FREQUENCY/1000];
 /** Private function prototypes ----------------------------------------------*/
 
 /** Private user code --------------------------------------------------------*/
@@ -55,26 +45,19 @@ uint8_t fifo_read_enabled = 0;
 ********************************************************************************
 */
 /**
-  ******************************************************************
-  * @brief   
-  * @param   [in]None
-  * @return  TRUE  成功
-  * @return  FALSE 失败
-  * @author  aron566
-  * @version V1.0
-  * @date    2021-01-19
-  ******************************************************************
-  */
-void FifoWrite(uint16_t data) {
-	fifobuf[fifo_w_ptr] = data;
-	fifo_w_ptr++;
+* @brief  User function that is called when 1 ms of PDM data is available.
+* 		  In this application only PDM to PCM conversion and USB streaming
+*                  is performed.
+* 		  User can add his own code here to perform some DSP or audio analysis.
+* @param  none
+* @retval None
+*/
+static void AudioProcess(void)
+{
+  USB_Audio_IN_PDMToPCM((uint16_t * )PDM_Buffer,PCM_Buffer);
+  Send_Audio_to_USB((int16_t *)PCM_Buffer, AUDIO_SAMPLING_FREQUENCY/1000*AUDIO_CHANNELS);
 }
 
-uint16_t FifoRead() {
-	uint16_t val = fifobuf[fifo_r_ptr];
-	fifo_r_ptr++;
-	return val;
-}
 /** Public application code --------------------------------------------------*/
 /*******************************************************************************
 *
@@ -82,22 +65,84 @@ uint16_t FifoRead() {
 *
 ********************************************************************************
 */
-void HAL_I2S_TxHalfCpltCallback (I2S_HandleTypeDef *hi2s) {
-	txstate = 1;
+/**
+  ******************************************************************
+  * @brief   I2S半发送完成回调
+  * @param   [in]hi2s I2S句柄
+  * @return  None
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-24
+  ******************************************************************
+  */
+void HAL_I2S_TxHalfCpltCallback(I2S_HandleTypeDef *hi2s) 
+{
+  UNUSED(hi2s);
 }
 
-void HAL_I2S_TxCpltCallback (I2S_HandleTypeDef *hi2s) {
-	txstate = 2;
+/**
+  ******************************************************************
+  * @brief   I2S发送完成回调
+  * @param   [in]hi2s I2S句柄
+  * @return  None
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-24
+  ******************************************************************
+  */
+void HAL_I2S_TxCpltCallback(I2S_HandleTypeDef *hi2s) 
+{
+  UNUSED(hi2s);
 }
 
-void HAL_I2S_RxHalfCpltCallback (I2S_HandleTypeDef *hi2s) {
-  SAI_Can_Read_Data_Flag = 1;
-  SAI_Receive_Complete_Flag = 0;
+/**
+  ******************************************************************
+  * @brief   I2S半接收完成回调
+  * @param   [in]hi2s I2S句柄
+  * @return  None
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-24
+  ******************************************************************
+  */
+void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s) 
+{
+
 }
 
-void HAL_I2S_RxCpltCallback (I2S_HandleTypeDef *hi2s) {
-  SAI_Can_Read_Data_Flag = 1;
-  SAI_Receive_Complete_Flag = 1;
+/**
+  ******************************************************************
+  * @brief   I2S接收完成回调
+  * @param   [in]hi2s I2S句柄
+  * @return  None
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-24
+  ******************************************************************
+  */
+void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s) 
+{
+
+}
+
+/**
+* @brief  Half Transfer user callback, called by BSP functions.
+* @param  None
+* @retval None
+*/
+void USB_Audio_IN_HalfTransfer_CallBack(void)
+{
+  AudioProcess();
+}
+
+/**
+* @brief  Transfer Complete user callback, called by BSP functions.
+* @param  None
+* @retval None
+*/
+void USB_Audio_IN_TransferComplete_CallBack(void)
+{
+  AudioProcess();
 }
 
 /**
@@ -112,59 +157,10 @@ void HAL_I2S_RxCpltCallback (I2S_HandleTypeDef *hi2s) {
   */
 void I2S_Port_Start(void)
 {
-    if (rxstate==1) {
-      PDM_To_PCM_Stream(&pdmRxBuf[0],&MidBuffer[0]);
-    	for (int i=0; i<16;i++) { FifoWrite(MidBuffer[i]); }
-    	if (fifo_w_ptr-fifo_r_ptr > 128) fifo_read_enabled=1;
-    	rxstate=0;
-
-      /*send*/
-  			for (int i=0; i<64;i=i+4) {
-				uint16_t data = FifoRead();
-				txBuf[i] = data;
-				txBuf[i+2] = data;
-        g_UACRingBuf[i] = data;
-			}
-    }
-
-    if (rxstate==2) {
-      PDM_To_PCM_Stream(&pdmRxBuf[64],&MidBuffer[0]);
-    	for (int i=0; i<16;i++) { FifoWrite(MidBuffer[i]); }
-    	rxstate=0;
-      
-      /*send*/
-			for (int i=64; i<128;i=i+4) {
-				uint16_t data = FifoRead();
-				txBuf[i] = data;
-				txBuf[i+2] = data;
-        g_UACRingBuf[i] = data;
-			}
-    }
-
-    if (txstate==1) {
-    	if (fifo_read_enabled==1) {
-			for (int i=0; i<64;i=i+4) {
-				uint16_t data = FifoRead();
-				txBuf[i] = data;
-				txBuf[i+2] = data;
-        g_UACRingBuf[i] = data;
-			}
-    	}
-    	txstate=0;
-    }
-
-    if (txstate==2) {
-    	if (fifo_read_enabled==1) {
-			for (int i=64; i<128;i=i+4) {
-				uint16_t data = FifoRead();
-				txBuf[i] = data;
-				txBuf[i+2] = data;
-        g_UACRingBuf[i] = data;
-			}
-
-		}
-    	txstate=0;
-    }
+  for(;;)
+  {
+    /*TODO*/
+  }
 }
 
 /**

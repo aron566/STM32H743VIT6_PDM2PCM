@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 /** Includes -----------------------------------------------------------------*/
-#include <stdint.h> /**< nedd definition of uint8_t */
+#include <stdint.h> /**< need definition of uint8_t */
 #include <stddef.h> /**< need definition of NULL    */
 #include <stdbool.h>/**< need definition of BOOL    */
 #include <stdio.h>  /**< if need printf             */
@@ -27,10 +27,22 @@ extern "C" {
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/
-
+/** 
+ * @brief Sampling Frequency enumerator  
+ */ 
+typedef enum
+{
+    SAMPLING_FREQ_16000 = 16000,
+    SAMPLING_FREQ_32000 = 32000,
+    SAMPLING_FREQ_48000 = 48000 
+}OUTPUT_FREQ_TypeDef;
 /** Exported constants -------------------------------------------------------*/
 
 /** Exported macros-----------------------------------------------------------*/
+#define AUDIO_CHANNELS 					    2
+#define AUDIO_SAMPLING_FREQUENCY 		16000
+#define PCM_TEMP_BUFF_SIZE          AUDIO_SAMPLING_FREQUENCY/1000*1
+
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 

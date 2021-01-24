@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 /** Includes -----------------------------------------------------------------*/
-#include <stdint.h> /**< nedd definition of uint8_t */
+#include <stdint.h> /**< need definition of uint8_t */
 #include <stddef.h> /**< need definition of NULL    */
 #include <stdbool.h>/**< need definition of BOOL    */
 #include <stdio.h>  /**< if need printf             */
@@ -69,6 +69,8 @@ typedef enum
 #define GET_U32_LOW_HALF_WORD(data)  ((uint16_t)(data&0xFFFF))/**< 获得u32数据低半字*/
 #define DEBUG_PRINT(str)  printf("%s%s%s%s\n", __FILE__, __FUNCTION__, __LINE__, str)/**< 诊断调试打印*/
 #define SaturaLH(N, L, H) (((N)<(L))?(L):(((N)>(H))?(H):(N)))
+#define HTONS(A)  ((((uint16_t)(A) & 0xff00) >> 8) | \
+                   (((uint16_t)(A) & 0x00ff) << 8))
 /** @}*/
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/

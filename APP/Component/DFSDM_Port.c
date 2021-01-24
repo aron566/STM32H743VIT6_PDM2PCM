@@ -25,9 +25,7 @@ extern "C" {
 #include "DFSDM_Port.h"
 #include "main.h"
 /** Private typedef ----------------------------------------------------------*/
-
 /** Private macros -----------------------------------------------------------*/
-
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter0;
@@ -178,22 +176,22 @@ void DFSDM_Port_Start(void)
   
   /*发送*/
   /*更新USB音频数据*/
-  #include "usbd_audio.h"
-  extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
-  extern volatile uint16_t g_UACWriteIndex;
-  extern volatile uint16_t g_UACReadIndex;
-  
-  for(int i = 0; i < PCM_ONE_SAMPLE_NUM; i++)
-  {
-    g_UACRingBuf[g_UACWriteIndex] = PCM_Data_Ptr[i];//Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
-    g_UACWriteIndex++;
-    g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
+//  #include "usbd_audio.h"
+//  extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
+//  extern volatile uint16_t g_UACWriteIndex;
+//  extern volatile uint16_t g_UACReadIndex;
+//  
+//  for(int i = 0; i < PCM_ONE_SAMPLE_NUM; i++)
+//  {
+//    g_UACRingBuf[g_UACWriteIndex] = PCM_Data_Ptr[i];//Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
+//    g_UACWriteIndex++;
+//    g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
 
-    g_UACRingBuf[g_UACWriteIndex] = PCM_Data_Ptr[i];//Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
-    g_UACWriteIndex++;
+//    g_UACRingBuf[g_UACWriteIndex] = PCM_Data_Ptr[i];//Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
+//    g_UACWriteIndex++;
 
-    g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
-  }
+//    g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
+//  }
 }
 
 /**

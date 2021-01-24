@@ -15,9 +15,9 @@
 extern "C" {
 #endif
 /** Includes -----------------------------------------------------------------*/
-#include <stdint.h> /**< nedd definition of uint8_t */
+#include <stdint.h> /**< need definition of uint8_t */
 #include <stddef.h> /**< need definition of NULL    */
-//#include <stdbool.h>/**< need definition of BOOL    */
+#include <stdbool.h>/**< need definition of BOOL    */
 #include <stdio.h>  /**< if need printf             */
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +27,26 @@ extern "C" {
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/
+/** 
+* @brief   Microphone internal structure definition  
+*/ 
+typedef struct
+{      
+  uint32_t MicChannels;       /*!< Specifies the number of channels */
 
+  uint32_t PdmBufferSize;     /*!< Specifies the size of the PDM double buffer for 1 microphone and 1 ms in bytes*/
+  
+  uint32_t Sampling_Freq;     /*!< Specifies the desired sampling frequency */
+  
+  uint32_t DecimationFactor;  /*!< Specifies the PDM to PCM decimation factor */
+  
+  uint16_t * PDM_Data;	      /*!< Takes track of the external PDM data buffer as passed by the user in the start function*/
+
+}PDM2PCM_HandlerTypeDef;
+
+/**
+* @}
+*/  
 /** Exported constants -------------------------------------------------------*/
 
 /** Exported macros-----------------------------------------------------------*/

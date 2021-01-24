@@ -26,10 +26,11 @@ extern "C" {
 #include "SAI_Port.h"
 #include "PDM_Datacov.h"
 #include "UART_Port.h"
-#include "uac_init.h"
 #include "I2S_Port.h"
 #include "Timer_Port.h"
 #include "DFSDM_Port.h"
+#include "utilities.h"
+#include "USB_Audio_Port.h"
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/

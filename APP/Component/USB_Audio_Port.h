@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 /** Includes -----------------------------------------------------------------*/
-#include <stdint.h> /**< nedd definition of uint8_t */
+#include <stdint.h> /**< need definition of uint8_t */
 #include <stddef.h> /**< need definition of NULL    */
 #include <stdbool.h>/**< need definition of BOOL    */
 #include <stdio.h>  /**< if need printf             */
@@ -23,7 +23,7 @@ extern "C" {
 #include <string.h>
 #include <limits.h> /**< need variable max value    */
 /** Private includes ---------------------------------------------------------*/
-
+#include "main.h"
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/
@@ -31,27 +31,33 @@ extern "C" {
 /** Exported constants -------------------------------------------------------*/
 
 /** Exported macros-----------------------------------------------------------*/
-//#define DSCP_BUFFER_SIZE             64
-//#define DSCP_DATA_BYTE               2
-//#define EP1_MAX_PKT_SIZE             ((DSCP_BUFFER_SIZE*2)+30)
-//#define UAC_BUFFER_SIZE              DSCP_BUFFER_SIZE*20
-//#define UAC_BUFFER_HIGH_THRESHOLD    DSCP_BUFFER_SIZE*15
-//#define UAC_BUFFER_LOW_THRESHOLD     DSCP_BUFFER_SIZE*5
+/* Audio status definition */     
+#define AUDIO_OK                        0
+#define AUDIO_ERROR                     1
+#define AUDIO_TIMEOUT                   2
 
-///*USB配置*/
 
-//#define AUDIO_IN_PACKET              1536
+#define AUDIOFREQ_48K                ((uint32_t)48000)
+#define AUDIOFREQ_32K                ((uint32_t)32000)
+#define AUDIOFREQ_16K                ((uint32_t)16000)
+#define AUDIOFREQ_8K                 ((uint32_t)8000)
 
-//#define IN_PACKET_NUM                2
-//#define TOTAL_IN_BUF_SIZE            ((uint32_t)(AUDIO_IN_PACKET * IN_PACKET_NUM))
-//    
-//#define AUDIO_TOTAL_BUF_SIZE         TOTAL_IN_BUF_SIZE * 3
+
+/* Those defines are used to allocate the right amount of RAM depending on the
+   maximum number of microphone and  sampling frequency desired */
+#define MAX_AUDIO_IN_FREQ             AUDIOFREQ_16K
+#define MAX_AUDIO_IN_CHANNEL_NBR      2 
+#define DECIMATION_FACTOR             64    
+
+/*BSP internal buffer size in half words (16 bits)*/
+#define PDM_INTERNAL_BUFFER_SIZE      MAX_AUDIO_IN_FREQ / 1000 * DECIMATION_FACTOR * 2 / 8
+
 /** Exported variables -------------------------------------------------------*/
-//extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
-//extern volatile uint16_t g_UACWriteIndex;
-//extern volatile uint16_t g_UACReadIndex;
+
 /** Exported functions prototypes --------------------------------------------*/
 
+/*音频USB初始化*/
+void USB_Audio_Port_Init(void);
 /*音频输出设备初始化*/
 int8_t USB_Audio_OutDevice_Init(uint32_t AudioFreq, uint32_t Volume, uint32_t options);
 /*音频输出设备反初始化*/
@@ -66,6 +72,24 @@ int8_t USB_Audio_OutDevice_MuteCtl(uint8_t cmd);
 int8_t USB_Audio_OutDevice_PeriodicTC(uint8_t *pbuf, uint32_t size, uint8_t cmd);
 /*音频输出设备状态获取*/
 int8_t USB_Audio_OutDevice_GetState(void);
+
+
+uint8_t USB_Audio_IN_Init(uint32_t AudioFreq, uint32_t BitRes, uint32_t ChnlNbr);
+uint8_t USB_Audio_IN_Record(uint16_t* pbuf, uint32_t size);
+uint8_t USB_Audio_IN_Stop(void);
+uint8_t USB_Audio_IN_Pause(void);
+uint8_t USB_Audio_IN_Resume(void);
+uint8_t USB_Audio_IN_SetVolume(uint8_t Volume);
+uint8_t USB_Audio_IN_PDMToPCM(uint16_t *PDMBuf, uint16_t *PCMBuf);
+
+/*中断回调*/
+void USB_Audio_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s);
+void USB_Audio_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s);
+void USB_Audio_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s);
+
+void USB_Audio_IN_TransferComplete_CallBack(void);
+void USB_Audio_IN_HalfTransfer_CallBack(void);
+void USB_Audio_IN_Error_Callback(void);
 
 #ifdef __cplusplus ///<end extern c
 }
