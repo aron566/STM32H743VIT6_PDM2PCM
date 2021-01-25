@@ -17,7 +17,7 @@ extern "C" {
 /** Includes -----------------------------------------------------------------*/
 #include <stdint.h> /**< nedd definition of uint8_t */
 #include <stddef.h> /**< need definition of NULL    */
-//#include <stdbool.h>/**< need definition of BOOL    */
+#include <stdbool.h>/**< need definition of BOOL    */
 #include <stdio.h>  /**< if need printf             */
 #include <stdlib.h>
 #include <string.h>

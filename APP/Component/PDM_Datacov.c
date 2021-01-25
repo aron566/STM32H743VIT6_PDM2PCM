@@ -38,8 +38,6 @@ typedef enum
 }PDM2PCM_ERROR_CODE_Typedef_t;
 /** Private macros -----------------------------------------------------------*/
 #define ENABLE_DEBUG    1
-#define PDM_SAM_POINTS  (640) 
-#define PCM_SAM_POINTS  (160) /**< 16khz频率，1ms 16个点，10ms数据160个采样点*/
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 /** Private variables --------------------------------------------------------*/
@@ -59,9 +57,8 @@ typedef enum
 /**
   ******************************************************************
   * @brief   PDM流转换PCM数据流返回码解析
-  * @param   [in]None
-  * @return  TRUE  成功
-  * @return  FALSE 失败
+  * @param   [in]code 返回码
+  * @return  code
   * @author  aron566
   * @version V1.0
   * @date    2021-01-19
