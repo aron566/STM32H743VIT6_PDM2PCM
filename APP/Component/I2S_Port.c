@@ -24,7 +24,7 @@ extern "C" {
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_I2S_PERIPHERAL 1
+#define ENABLE_I2S_PERIPHERAL   1/**< 选择是否启用I2S模块*/
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 extern I2S_HandleTypeDef hi2s1;
@@ -54,21 +54,61 @@ extern volatile uint16_t g_UACReadIndex;
 *
 ********************************************************************************
 */
+/**
+  ******************************************************************
+  * @brief   I2S半发送完成中断
+  * @param   [in]hi2s 句柄
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-26
+  ******************************************************************
+  */
 void HAL_I2S_TxHalfCpltCallback(I2S_HandleTypeDef *hi2s) 
 {
-
+  UNUSED(hi2s);
 }
 
+/**
+  ******************************************************************
+  * @brief   I2S发送完成中断
+  * @param   [in]hi2s 句柄
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-26
+  ******************************************************************
+  */
 void HAL_I2S_TxCpltCallback(I2S_HandleTypeDef *hi2s) 
 {
-
+  UNUSED(hi2s);
 }
 
+/**
+  ******************************************************************
+  * @brief   I2S半接收完成中断
+  * @param   [in]hi2s 句柄
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-26
+  ******************************************************************
+  */
 void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s) 
 {
 
 }
 
+/**
+  ******************************************************************
+  * @brief   I2S接收完成中断
+  * @param   [in]hi2s 句柄
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-26
+  ******************************************************************
+  */
 void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s) 
 {
 
