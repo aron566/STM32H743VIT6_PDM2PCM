@@ -238,12 +238,10 @@ void User_Main_PlayTask_Process_Loop(void)
   SAI_Can_Read_Data_Flag = 0;
 
   /*转换PDM数据*/
-  extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[8];
+  extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
   
-  uint16_t data_offset = (SAI_Receive_Complete_Flag == 0)?0:PDM_ONE_SAMPLE_NUM;
-  uint16_t *p_PDM_Data = Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf+data_offset;
+  uint16_t *p_PDM_Data = (SAI_Receive_Complete_Flag == 0)?Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf:Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf+64;
   
-
   /*发送*/
   /*更新USB音频数据*/
   #include "usbd_audio.h"
@@ -252,14 +250,14 @@ void User_Main_PlayTask_Process_Loop(void)
   extern volatile uint16_t g_UACReadIndex;
   
   /*前置分离通道数据：L8bit-R8bit-L8bit-R8bit-L8-R8......MSB格式取低位字节通道*/
-  for(int i = 0; i < PDM_ONE_SAMPLE_NUM; i++)
+  for(int i = 0; i < 64; i++)
   {
     Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] = p_PDM_Data[i*2] & 0xFF;
     Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] |= (uint16_t)((p_PDM_Data[i*2+1] & 0xFF)<<8);
     
-//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] |= p_PDM_Data[i] & 0xFF;
+//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] |= p_PDM_Data[i*2] & 0xFF;
 //    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] <<= 8;
-//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] += (uint16_t)(p_PDM_Data[i+1] & 0xFF);/*MSB*/
+//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] += (uint16_t)(p_PDM_Data[i*2+1] & 0xFF);/*MSB*/
   }
   PDM_To_PCM_Stream(Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf, (uint16_t *)Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf);
   
@@ -309,7 +307,6 @@ void User_Main_Task_Process_Loop(void)
     
 //    User_Main_PlayTask_Process_Loop();
     DFSDM_Port_Start();
-
   }
   /*never return*/
 }
@@ -341,6 +338,7 @@ void User_Main_Task_Init(void)
   /*USB初始化*/
   UAC_Init();
   
+  /*I2S初始化*/
 //  I2S_Port_Init();
   /*other initialization task code*/
 }

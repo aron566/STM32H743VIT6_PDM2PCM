@@ -46,7 +46,7 @@ void MX_SAI1_Init(void)
   hsai_BlockA1.Init.AudioMode = SAI_MODEMASTER_RX;
   hsai_BlockA1.Init.DataSize = SAI_DATASIZE_16;
   hsai_BlockA1.Init.FirstBit = SAI_FIRSTBIT_MSB;
-  hsai_BlockA1.Init.ClockStrobing = SAI_CLOCKSTROBING_FALLINGEDGE;
+  hsai_BlockA1.Init.ClockStrobing = SAI_CLOCKSTROBING_RISINGEDGE;
   hsai_BlockA1.Init.Synchro = SAI_ASYNCHRONOUS;
   hsai_BlockA1.Init.OutputDrive = SAI_OUTPUTDRIVE_DISABLE;
   hsai_BlockA1.Init.NoDivider = SAI_MASTERDIVIDER_DISABLE;

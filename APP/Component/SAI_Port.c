@@ -397,9 +397,7 @@ void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef *hsai)
 void Sai_Port_Init(void)
 {
   /*启动SAI3 DMA 双缓冲接收,双声道大小*/
-//HAL_SAI_MultiMemReceive_DMA(&hsai_BlockA1, (uint8_t*)Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf, (uint8_t*)(Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf+PDM_TWO_SAMPLE_NUM), PDM_TWO_SAMPLE_NUM);
-  /*启动循环发送*/
-
+  //HAL_SAI_MultiMemReceive_DMA(&hsai_BlockA1, (uint8_t*)Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf, (uint8_t *)((uint16_t *)(Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf+64)), 64*2);
 }
 
 /**
