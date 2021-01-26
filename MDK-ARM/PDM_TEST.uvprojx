@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H743xx,USE_USB_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;                 ../PDM2PCM/App;                 ../Drivers/STM32H7xx_HAL_Driver/Inc;                 ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;                 ../Middlewares/ST/STM32_Audio/Addons/PDM/Inc;                 ../Drivers/CMSIS/Device/ST/STM32H7xx/Include;                 ../Drivers/CMSIS/Include;                 ..\APP\Component;                 ..\APP\Main;                 ..\Utilities;                 ..\USB\STM32_USB_Device_Library\Core\Inc;                 ..\USB\STM32_USB_Device_Library\Class\AUDIO\Inc;                 ..\USB\USB_APP</IncludePath>
+              <IncludePath>../Core/Inc;                   ../PDM2PCM/App;                   ../Drivers/STM32H7xx_HAL_Driver/Inc;                   ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;                   ../Middlewares/ST/STM32_Audio/Addons/PDM/Inc;                   ../Drivers/CMSIS/Device/ST/STM32H7xx/Include;                   ../Drivers/CMSIS/Include;                   ..\APP\Component;                   ..\APP\Main;                   ..\Utilities;                   ..\USB\STM32_USB_Device_Library\Core\Inc;                   ..\USB\STM32_USB_Device_Library\Class\AUDIO\Inc;                   ..\USB\USB_APP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

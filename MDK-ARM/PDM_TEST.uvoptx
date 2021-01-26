@@ -158,7 +158,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Pdm2Pcm_ChannelBuf</ItemText>
+          <ItemText>Pdm2Pcm_ChannelBuf,0x10</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -915,7 +915,7 @@
 
   <Group>
     <GroupName>USB_Core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -959,7 +959,7 @@
 
   <Group>
     <GroupName>USB_Driver</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -979,7 +979,7 @@
 
   <Group>
     <GroupName>USB_App</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

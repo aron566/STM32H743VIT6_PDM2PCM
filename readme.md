@@ -1,5 +1,9 @@
 # STM32H743VIT6 PDM2PCM
 
+## 关于Cache加速
+
+[Cache加速资料](AboutCache/readme.md)
+
 ## 音频外设术语定义
 
 ### MCLK主时钟

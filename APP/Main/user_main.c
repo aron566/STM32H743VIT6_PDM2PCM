@@ -229,63 +229,63 @@ static void Algorithm_Old_Process_Start(void)
   */
 void User_Main_PlayTask_Process_Loop(void)
 {
-  extern volatile uint8_t SAI_Can_Read_Data_Flag;
-  if(SAI_Can_Read_Data_Flag == 0)
-  {
-    return;
-  }
-  
-  SAI_Can_Read_Data_Flag = 0;
+//  extern volatile uint8_t SAI_Can_Read_Data_Flag;
+//  if(SAI_Can_Read_Data_Flag == 0)
+//  {
+//    return;
+//  }
+//  
+//  SAI_Can_Read_Data_Flag = 0;
 
-  /*转换PDM数据*/
-  extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
-  
-  uint16_t *p_PDM_Data = (SAI_Receive_Complete_Flag == 0)?Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf:Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf+64;
-  
-  /*发送*/
-  /*更新USB音频数据*/
-  #include "usbd_audio.h"
-  extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
-  extern volatile uint16_t g_UACWriteIndex;
-  extern volatile uint16_t g_UACReadIndex;
-  
-  /*前置分离通道数据：L8bit-R8bit-L8bit-R8bit-L8-R8......MSB格式取低位字节通道*/
-  for(int i = 0; i < 64; i++)
-  {
-    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] = p_PDM_Data[i*2] & 0xFF;
-    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] |= (uint16_t)((p_PDM_Data[i*2+1] & 0xFF)<<8);
-    
-//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] |= p_PDM_Data[i*2] & 0xFF;
-//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] <<= 8;
-//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] += (uint16_t)(p_PDM_Data[i*2+1] & 0xFF);/*MSB*/
-  }
-  PDM_To_PCM_Stream(Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf, (uint16_t *)Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf);
-  
-  /*后置分离通道数据*/
-//  PDM_To_PCM_Stream(p_PDM_Data, (uint16_t *)Pdm2Pcm_ChannelBuf[0].PCM_Buf);
-    /*双通道PCM数据分离*/
+//  /*转换PDM数据*/
+//  extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
+//  
+//  uint16_t *p_PDM_Data = (SAI_Receive_Complete_Flag == 0)?Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf:Pdm2Pcm_ChannelBuf[0].PDM_RX_Buf+64;
+//  
+//  /*发送*/
+//  /*更新USB音频数据*/
+//  #include "usbd_audio.h"
+//  extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
+//  extern volatile uint16_t g_UACWriteIndex;
+//  extern volatile uint16_t g_UACReadIndex;
+//  
+//  /*前置分离通道数据：L8bit-R8bit-L8bit-R8bit-L8-R8......MSB格式取低位字节通道*/
+//  for(int i = 0; i < 64; i++)
+//  {
+//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] = p_PDM_Data[i*2] & 0xFF;
+//    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] |= (uint16_t)((p_PDM_Data[i*2+1] & 0xFF)<<8);
+//    
+////    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] |= p_PDM_Data[i*2] & 0xFF;
+////    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] <<= 8;
+////    Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf[i] += (uint16_t)(p_PDM_Data[i*2+1] & 0xFF);/*MSB*/
+//  }
+//  PDM_To_PCM_Stream(Pdm2Pcm_ChannelBuf[0].PDM_One_Sample_Buf, (uint16_t *)Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf);
+//  
+//  /*后置分离通道数据*/
+////  PDM_To_PCM_Stream(p_PDM_Data, (uint16_t *)Pdm2Pcm_ChannelBuf[0].PCM_Buf);
+//    /*双通道PCM数据分离*/
+////  for(int i = 0; i < PCM_ONE_SAMPLE_NUM; i++)
+////  {
+////    Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i] = Pdm2Pcm_ChannelBuf[0].PCM_Buf[i*2];
+////  }
+//  
 //  for(int i = 0; i < PCM_ONE_SAMPLE_NUM; i++)
 //  {
-//    Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i] = Pdm2Pcm_ChannelBuf[0].PCM_Buf[i*2];
+//    g_UACRingBuf[g_UACWriteIndex] = Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
+//    g_UACWriteIndex++;
+//    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
+//    {
+//      g_UACWriteIndex = 0;
+//    }
+
+//    g_UACRingBuf[g_UACWriteIndex] = Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
+//    g_UACWriteIndex++;
+
+//    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
+//    {
+//      g_UACWriteIndex = 0;
+//    }
 //  }
-  
-  for(int i = 0; i < PCM_ONE_SAMPLE_NUM; i++)
-  {
-    g_UACRingBuf[g_UACWriteIndex] = Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
-    g_UACWriteIndex++;
-    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
-    {
-      g_UACWriteIndex = 0;
-    }
-
-    g_UACRingBuf[g_UACWriteIndex] = Pdm2Pcm_ChannelBuf[0].PCM_One_Sample_Buf[i];
-    g_UACWriteIndex++;
-
-    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
-    {
-      g_UACWriteIndex = 0;
-    }
-  }
   /*never return*/
 }
 
@@ -327,10 +327,10 @@ void User_Main_Task_Init(void)
   Uart_Port_Init();
 
   /*定时器初始化*/
-  Timer_Port_Init();
+//  Timer_Port_Init();
   
   /*Sai操作初始化*/
-  Sai_Port_Init();
+//  Sai_Port_Init();
   
   /*DFSDM初始化*/
   DFSDM_Port_Init();
@@ -358,7 +358,7 @@ void User_InterruptVectorTable_Move(void)
   uint32_t *SouceAddr = (uint32_t *)FLASH_BANK1_BASE;
   uint32_t *DestAddr = (uint32_t *)D1_DTCMRAM_BASE;
   memcpy(DestAddr, SouceAddr, 0x400);
-  /* 设置中断向量表到 ITCM 里面*/
+  /* 设置中断向量表到 DTCM 里面*/
   SCB->VTOR = D1_DTCMRAM_BASE;
 }
 

@@ -49,15 +49,7 @@ volatile uint8_t SAI_Receive_Complete_Flag   = 0;
 volatile uint8_t SAI_Can_Send_Data_Flag      = 1;
 volatile uint8_t SAI_Can_Read_Data_Flag      = 0;
 /** Private variables --------------------------------------------------------*/
-///* 接收缓冲区 2xFrameLength */
-//__attribute__ ((at(0x38001000))) volatile uint16_t SAI_RX_Buf_0[STEREO_FRAME_SIZE] = {0};
-//__attribute__ ((at(0x38002000))) volatile uint16_t SAI_RX_Buf_1[STEREO_FRAME_SIZE] = {0};
-
-///*PDM数据接收缓冲区*/
-//__attribute__ ((at(0x38000000))) volatile uint16_t SAI_RX_Buf_1_6[STEREO_FRAME_SIZE] = {0};
-//__attribute__ ((at(0x38003000+MONO_FRAME_SIZE*7))) volatile uint16_t SAI_RX_Buf_7_8[STEREO_FRAME_SIZE] = {0};
-
-//__attribute__ ((at(0x24001000))) volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM] = {0};
+/*音频数据接收缓冲区*/
 __attribute__ ((at(0x38000000))) volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM] = {0};
 /** Private function prototypes ----------------------------------------------*/
 /*中断回调*/

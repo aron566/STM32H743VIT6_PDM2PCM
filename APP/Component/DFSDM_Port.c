@@ -30,9 +30,16 @@ extern "C" {
 
 /** Private macros -----------------------------------------------------------*/
 #define ENABLE_DFSDM_PERIPHERAL   1/**< 选择是否启用DFSDM模块*/
-#define FRONT_CAN_READ            1
-#define BACK_CAN_READ             2
-#define NOTHING_CAN_READ          0
+
+/*重置接收缓冲大小*/
+#if ENABLE_DFSDM_PERIPHERAL
+  #ifdef PCM_ONE_SAMPLE_NUM
+    #undef PCM_ONE_SAMPLE_NUM
+    #define PCM_ONE_SAMPLE_NUM    MONO_FRAME_SIZE
+    #undef PCM_TWO_SAMPLE_NUM
+    #define PCM_TWO_SAMPLE_NUM    (PCM_ONE_SAMPLE_NUM*2)
+  #endif
+#endif
 /** Private constants --------------------------------------------------------*/
 
 /** Public variables ---------------------------------------------------------*/
@@ -40,44 +47,23 @@ extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter0;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter1;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter3;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel0;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel1;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel2;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel3;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel4;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel5;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel6;
-extern DFSDM_Channel_HandleTypeDef hdfsdm1_channel7;
-extern volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
+extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
 
 extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 /** Private variables --------------------------------------------------------*/
 
-/*microphone 1 声音扎耳*/
-static uint8_t DmaRecHalfBuffCplt_1  = NOTHING_CAN_READ;
-static uint8_t DmaRecBuffCplt_1      = NOTHING_CAN_READ;
+static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
+static volatile uint32_t DFSDM_DmaCanRead_Flag  = 0;
+static volatile uint32_t DmaRecHalfBuffCplt_Num = 0;
+static volatile uint32_t DmaRecBuffCplt_Num     = 0;
 
-/*microphone 2 有尾音*/
-static uint8_t DmaRecHalfBuffCplt_2  = NOTHING_CAN_READ;
-static uint8_t DmaRecBuffCplt_2      = NOTHING_CAN_READ;
+static int16_t MIC1_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
+static int16_t MIC2_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
+static int16_t MIC3_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
+static int16_t MIC4_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
 
-/*microphone 3 声音非常小*/
-static uint8_t DmaRecHalfBuffCplt_3  = NOTHING_CAN_READ;
-static uint8_t DmaRecBuffCplt_3      = NOTHING_CAN_READ;
-
-/*microphone 4 声音非常小*/
-static uint8_t DmaRecHalfBuffCplt_4  = NOTHING_CAN_READ;
-static uint8_t DmaRecBuffCplt_4      = NOTHING_CAN_READ;
-
-/*microphone 5 声音非常小*/
-
-/*microphone 78 没有输出*/
-
-static volatile uint8_t DmaCanRead_Flag        = NOTHING_CAN_READ;
-static volatile uint8_t DmaRecHalfBuffCplt_Num = NOTHING_CAN_READ;
-static volatile uint8_t DmaRecBuffCplt_Num     = NOTHING_CAN_READ;
 /** Private function prototypes ----------------------------------------------*/
 
 /** Private user code --------------------------------------------------------*/
@@ -104,35 +90,11 @@ static volatile uint8_t DmaRecBuffCplt_Num     = NOTHING_CAN_READ;
   */
 void HAL_DFSDM_FilterRegConvHalfCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
 {
-  if(hdfsdm_filter == &hdfsdm1_filter0)
-  {
-    DmaRecHalfBuffCplt_Num = 1;
-    DmaRecHalfBuffCplt_1 = 1;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[0].PCM_Buf[0], PCM_TWO_SAMPLE_NUM);
-  }
-  else if(hdfsdm_filter == &hdfsdm1_filter1)
-  {
-    DmaRecHalfBuffCplt_Num = 2;
-    DmaRecHalfBuffCplt_2 = 1;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[1].PCM_Buf[0], PCM_TWO_SAMPLE_NUM);
-  }
-  else if(hdfsdm_filter == &hdfsdm1_filter2)
-  {
-    DmaRecHalfBuffCplt_Num = 3;
-    DmaRecHalfBuffCplt_3 = 1;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[2].PCM_Buf[0], PCM_TWO_SAMPLE_NUM);
-  }
-  else if(hdfsdm_filter == &hdfsdm1_filter3)
-  {
-    DmaRecHalfBuffCplt_Num = 4;
-    DmaRecHalfBuffCplt_4 = 4;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[3].PCM_Buf[0], PCM_TWO_SAMPLE_NUM);
-  }
-  DmaCanRead_Flag = FRONT_CAN_READ;
+  DFSDM_DmaCanRead_Flag = 1;
+  PCM_Data_Ptr[0] = (int16_t*)Pdm2Pcm_ChannelBuf[0].PCM_Buf;
+  PCM_Data_Ptr[1] = (int16_t*)Pdm2Pcm_ChannelBuf[1].PCM_Buf;
+  PCM_Data_Ptr[2] = (int16_t*)Pdm2Pcm_ChannelBuf[2].PCM_Buf;
+  PCM_Data_Ptr[3] = (int16_t*)Pdm2Pcm_ChannelBuf[3].PCM_Buf;
 }
 
 /**
@@ -144,35 +106,11 @@ void HAL_DFSDM_FilterRegConvHalfCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_
   */
 void HAL_DFSDM_FilterRegConvCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_filter)
 {
-  if(hdfsdm_filter == &hdfsdm1_filter0)
-  {
-    DmaRecBuffCplt_Num = 1;
-    DmaRecBuffCplt_1 = 1;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[0].PCM_Buf[PCM_ONE_SAMPLE_NUM], PCM_TWO_SAMPLE_NUM);
-  }
-  else if(hdfsdm_filter == &hdfsdm1_filter1)
-  {
-    DmaRecBuffCplt_Num = 2;
-    DmaRecBuffCplt_2 = 1;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[1].PCM_Buf[PCM_ONE_SAMPLE_NUM], PCM_TWO_SAMPLE_NUM);
-  }
-  else if(hdfsdm_filter == &hdfsdm1_filter2)
-  {
-    DmaRecBuffCplt_Num = 3;
-    DmaRecBuffCplt_3 = 1;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[2].PCM_Buf[PCM_ONE_SAMPLE_NUM], PCM_TWO_SAMPLE_NUM);
-  }
-  else if(hdfsdm_filter == &hdfsdm1_filter3)
-  {
-    DmaRecBuffCplt_Num = 4;
-    DmaRecBuffCplt_4 = 1;
-    /* Invalidate Data Cache to get the updated content of the SRAM*/
-    SCB_InvalidateDCache_by_Addr((uint32_t*)&Pdm2Pcm_ChannelBuf[3].PCM_Buf[PCM_ONE_SAMPLE_NUM], PCM_TWO_SAMPLE_NUM);
-  }
-  DmaCanRead_Flag = BACK_CAN_READ;
+  DFSDM_DmaCanRead_Flag = 1;
+  PCM_Data_Ptr[0] = (int16_t*)&Pdm2Pcm_ChannelBuf[0].PCM_Buf[PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[1] = (int16_t*)&Pdm2Pcm_ChannelBuf[1].PCM_Buf[PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[2] = (int16_t*)&Pdm2Pcm_ChannelBuf[2].PCM_Buf[PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[3] = (int16_t*)&Pdm2Pcm_ChannelBuf[3].PCM_Buf[PCM_ONE_SAMPLE_NUM];
 }
 
 /**
@@ -186,65 +124,31 @@ void HAL_DFSDM_FilterRegConvCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_filt
   ******************************************************************
   */
 void DFSDM_Port_Start(void)
-{
-  if(DmaCanRead_Flag == NOTHING_CAN_READ)
+{ 
+  if(DFSDM_DmaCanRead_Flag == 0)
   {
     return;
   }
-
-  int16_t *PCM_Data_Ptr = NULL;
-  if(DmaCanRead_Flag == FRONT_CAN_READ)
-  {
-    if(DmaRecBuffCplt_Num == 1)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 1)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-    if(DmaRecBuffCplt_Num == 2)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 2)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-    if(DmaRecBuffCplt_Num == 3)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 3)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-    if(DmaRecBuffCplt_Num == 4)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 4)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-  }
-  else if(DmaCanRead_Flag == BACK_CAN_READ)
-  {
-    if(DmaRecBuffCplt_Num == 1)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 1)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-    if(DmaRecBuffCplt_Num == 2)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 2)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-    if(DmaRecBuffCplt_Num == 3)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 3)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-    if(DmaRecBuffCplt_Num == 4)
-    {
-      PCM_Data_Ptr = (DmaRecHalfBuffCplt_Num == 4)?(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf:(int16_t *)Pdm2Pcm_ChannelBuf[DmaRecBuffCplt_Num-1].PCM_Buf+PCM_ONE_SAMPLE_NUM;
-    }
-  }
-
+  
+  memcpy((void *)MIC1_Aidio_Buf, (void *)PCM_Data_Ptr[0], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memcpy((void *)MIC2_Aidio_Buf, (void *)PCM_Data_Ptr[1], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memcpy((void *)MIC3_Aidio_Buf, (void *)PCM_Data_Ptr[2], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memcpy((void *)MIC4_Aidio_Buf, (void *)PCM_Data_Ptr[3], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  
   /*发送*/
   /*更新USB音频数据*/
   for(int i = 0; i < PCM_ONE_SAMPLE_NUM; i++)
   {
-    g_UACRingBuf[g_UACWriteIndex] = PCM_Data_Ptr[i];
+    g_UACRingBuf[g_UACWriteIndex] = MIC1_Aidio_Buf[i];
     g_UACWriteIndex++;
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
 
-    g_UACRingBuf[g_UACWriteIndex] = PCM_Data_Ptr[i];
+    g_UACRingBuf[g_UACWriteIndex] = MIC2_Aidio_Buf[i];
     g_UACWriteIndex++;
 
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
   }
+  DFSDM_DmaCanRead_Flag = 0;
 }
 
 /**
@@ -261,28 +165,28 @@ void DFSDM_Port_Init(void)
 {
 #if ENABLE_DFSDM_PERIPHERAL
 	/*启动通道0采样*/	
-//  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter0, (int16_t *)Pdm2Pcm_ChannelBuf[0].PCM_Buf, PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
-//  {
-//    Error_Handler();
-//  }
+  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter0, (int16_t *)(Pdm2Pcm_ChannelBuf[0].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
+  {
+    Error_Handler();
+  }
 
   /*启动通道1采样*/		
-  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter1, (int16_t *)(Pdm2Pcm_ChannelBuf[1].PCM_Buf), PCM_ONE_SAMPLE_NUM) == HAL_ERROR)
+  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter1, (int16_t *)(Pdm2Pcm_ChannelBuf[1].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
   {
     Error_Handler();
   }
   
   /*启动通道2采样*/	
-//  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter2, (int16_t *)(Pdm2Pcm_ChannelBuf[2].PCM_Buf), PCM_ONE_SAMPLE_NUM) == HAL_ERROR)
-//  {
-//    Error_Handler();
-//  }
+  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter2, (int16_t *)(Pdm2Pcm_ChannelBuf[2].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
+  {
+    Error_Handler();
+  }
   
   /*启动通道3采样*/	
-//  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter3, (int16_t *)(Pdm2Pcm_ChannelBuf[3].PCM_Buf), PCM_ONE_SAMPLE_NUM) == HAL_ERROR)
-//  {
-//    Error_Handler();
-//  }
+  if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter3, (int16_t *)(Pdm2Pcm_ChannelBuf[3].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
+  {
+    Error_Handler();
+  }
 #endif
 }
 
