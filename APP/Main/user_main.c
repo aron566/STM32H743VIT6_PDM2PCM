@@ -327,10 +327,10 @@ void User_Main_Task_Init(void)
   Uart_Port_Init();
 
   /*定时器初始化*/
-//  Timer_Port_Init();
+  Timer_Port_Init();
   
   /*Sai操作初始化*/
-//  Sai_Port_Init();
+  Sai_Port_Init();
   
   /*DFSDM初始化*/
   DFSDM_Port_Init();
@@ -339,7 +339,7 @@ void User_Main_Task_Init(void)
   UAC_Init();
   
   /*I2S初始化*/
-//  I2S_Port_Init();
+  I2S_Port_Init();
   /*other initialization task code*/
 }
 

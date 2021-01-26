@@ -27,7 +27,6 @@ extern "C" {
 #include "main.h"
 #include "usbd_audio.h"
 /** Private typedef ----------------------------------------------------------*/
-
 /** Private macros -----------------------------------------------------------*/
 #define ENABLE_DFSDM_PERIPHERAL   1/**< 选择是否启用DFSDM模块*/
 
@@ -49,16 +48,16 @@ extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter3;
 extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
 
+/*USB Microphone数据接收缓冲区*/
 extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 /** Private variables --------------------------------------------------------*/
-
+/*DFSDM数据接收标志*/
 static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
 static volatile uint32_t DFSDM_DmaCanRead_Flag  = 0;
-static volatile uint32_t DmaRecHalfBuffCplt_Num = 0;
-static volatile uint32_t DmaRecBuffCplt_Num     = 0;
 
+/*4MIC数据拷贝缓冲区*/
 static int16_t MIC1_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
 static int16_t MIC2_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
 static int16_t MIC3_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};

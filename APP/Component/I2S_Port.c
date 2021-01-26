@@ -24,7 +24,7 @@ extern "C" {
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_I2S_PERIPHERAL   1/**< 选择是否启用I2S模块*/
+#define ENABLE_I2S_PERIPHERAL   0/**< 选择是否启用I2S模块*/
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 extern I2S_HandleTypeDef hi2s1;
