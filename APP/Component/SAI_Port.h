@@ -28,10 +28,10 @@ extern "C" {
 #define MIC_CHANNEL_NUM     (8/2U)                /**< 通道总数*/
 #define MONO_FRAME_SIZE     (160)                 /**< 单声道帧大小*/
 #define STEREO_FRAME_SIZE   (MONO_FRAME_SIZE*2)   /**< 立体声帧大小*/
-#define PCM_ONE_SAMPLE_NUM  STEREO_FRAME_SIZE       /**< 双通道PCM转换帧大小*/
-#define PCM_TWO_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*2)/**< 双通道PCM转换帧大小*/
-#define PDM_ONE_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*4)/**< 双通道PDM采样帧大小*/
-#define PDM_TWO_SAMPLE_NUM  (PDM_ONE_SAMPLE_NUM*2)/**< 双通道PDM采样帧大小*/
+#define PCM_ONE_SAMPLE_NUM  STEREO_FRAME_SIZE     /**< 单次PCM转换帧大小*/
+#define PCM_TWO_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*2)/**< 两次PCM转换帧大小*/
+#define PDM_ONE_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*4)/**< 单次PDM采样帧大小*/
+#define PDM_TWO_SAMPLE_NUM  (PDM_ONE_SAMPLE_NUM*2)/**< 两次PDM采样帧大小*/
 
 /** Exported typedefines -----------------------------------------------------*/
 /*PDM转PCM数据结构*/

@@ -24,7 +24,23 @@ extern "C" {
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_I2S_PERIPHERAL   0/**< 选择是否启用I2S模块*/
+#define ENABLE_I2S_PERIPHERAL   1/**< 选择是否启用I2S模块*/
+
+/*重置接收缓冲大小*/
+#if ENABLE_I2S_PERIPHERAL
+  #ifdef PCM_ONE_SAMPLE_NUM
+    #undef PCM_ONE_SAMPLE_NUM
+    #define PCM_ONE_SAMPLE_NUM    MONO_FRAME_SIZE/**< 单次PCM转换帧大小*/
+    #undef PCM_TWO_SAMPLE_NUM
+    #define PCM_TWO_SAMPLE_NUM    (PCM_ONE_SAMPLE_NUM*2)/**< 两次PCM转换帧大小*/
+  #endif
+  #ifdef PDM_ONE_SAMPLE_NUM
+  #undef PDM_ONE_SAMPLE_NUM
+  #define PDM_ONE_SAMPLE_NUM      (PCM_ONE_SAMPLE_NUM*4)/**< 单次PDM采样帧大小*/
+  #undef PDM_TWO_SAMPLE_NUM
+  #define PDM_TWO_SAMPLE_NUM      (PDM_ONE_SAMPLE_NUM*2)/**< 两次PDM采样帧大小*/
+  #endif
+#endif
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 extern I2S_HandleTypeDef hi2s1;
@@ -34,6 +50,9 @@ extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 /** Private variables --------------------------------------------------------*/
+/*I2S数据接收标志*/
+static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
+static volatile uint32_t I2S_DmaCanRead_Flag  = 0;
 
 /** Private function prototypes ----------------------------------------------*/
 
@@ -46,7 +65,7 @@ extern volatile uint16_t g_UACReadIndex;
 *
 ********************************************************************************
 */
-
+//static void u8tou
 /** Public application code --------------------------------------------------*/
 /*******************************************************************************
 *
@@ -126,10 +145,14 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
   */
 void I2S_Port_Start(void)
 {
-//  if()
-//  {
-//    
-//  }
+  if(I2S_DmaCanRead_Flag == 0)
+  {
+    return;
+  }
+  
+  
+  
+  I2S_DmaCanRead_Flag = 0;
 }
 
 /**

@@ -28,7 +28,7 @@ extern "C" {
 #include "usbd_audio.h"
 /** Private typedef ----------------------------------------------------------*/
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_DFSDM_PERIPHERAL   1/**< 选择是否启用DFSDM模块*/
+#define ENABLE_DFSDM_PERIPHERAL   0/**< 选择是否启用DFSDM模块*/
 
 /*重置接收缓冲大小*/
 #if ENABLE_DFSDM_PERIPHERAL

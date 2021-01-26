@@ -49,7 +49,7 @@ volatile uint8_t SAI_Receive_Complete_Flag   = 0;
 volatile uint8_t SAI_Can_Send_Data_Flag      = 1;
 volatile uint8_t SAI_Can_Read_Data_Flag      = 0;
 /** Private variables --------------------------------------------------------*/
-/*音频数据接收缓冲区*/
+/*音频转换数据接收缓冲区*/
 __attribute__ ((at(0x38000000))) volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM] = {0};
 /** Private function prototypes ----------------------------------------------*/
 /*中断回调*/
