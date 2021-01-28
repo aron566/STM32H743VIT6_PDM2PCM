@@ -4,5 +4,3 @@
 void UAC_Init(void);
 
 #endif
-
-

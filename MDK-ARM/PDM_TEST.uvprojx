@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H743xx,USE_USB_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;                   ../PDM2PCM/App;                   ../Drivers/STM32H7xx_HAL_Driver/Inc;                   ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;                   ../Middlewares/ST/STM32_Audio/Addons/PDM/Inc;                   ../Drivers/CMSIS/Device/ST/STM32H7xx/Include;                   ../Drivers/CMSIS/Include;                   ..\APP\Component;                   ..\APP\Main;                   ..\Utilities;                   ..\USB\STM32_USB_Device_Library\Core\Inc;                   ..\USB\STM32_USB_Device_Library\Class\AUDIO\Inc;                   ..\USB\USB_APP</IncludePath>
+              <IncludePath>../Core/Inc;                                     ../Drivers/STM32H7xx_HAL_Driver/Inc;                                     ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;                                     ../Drivers/CMSIS/Device/ST/STM32H7xx/Include;                                     ../Drivers/CMSIS/Include;                                     ..\APP\Component;                                     ..\APP\Main;                                     ..\Utilities;                                     ..\USB\STM32_USB_Device_Library\Core\Inc;                                     ..\USB\STM32_USB_Device_Library\Class\AUDIO\Inc;                                     ..\USB\USB_APP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -404,24 +404,9 @@
               <FilePath>../Core/Src/gpio.c</FilePath>
             </File>
             <File>
-              <FileName>crc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>dfsdm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/dfsdm.c</FilePath>
-            </File>
-            <File>
               <FileName>dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/dma.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2s.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/i2s.c</FilePath>
             </File>
             <File>
               <FileName>sai.c</FileName>
@@ -507,32 +492,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/User/PDM2PCM/App</GroupName>
-          <Files>
-            <File>
-              <FileName>pdm2pcm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../PDM2PCM/App/pdm2pcm.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Drivers/STM32H7xx_HAL_Driver</GroupName>
           <Files>
             <File>
               <FileName>stm32h7xx_hal_cortex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_crc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_crc_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_crc_ex.c</FilePath>
             </File>
             <File>
               <FileName>stm32h7xx_hal_rcc.c</FileName>
@@ -610,21 +575,6 @@
               <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c</FilePath>
             </File>
             <File>
-              <FileName>stm32h7xx_hal_dfsdm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dfsdm.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_i2s.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2s.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32h7xx_hal_i2s_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2s_ex.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32h7xx_hal_sai.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sai.c</FilePath>
@@ -682,16 +632,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/PDMFilter</GroupName>
-          <Files>
-            <File>
-              <FileName>libPDMFilter_CM7_Keil_wc16.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>../Middlewares/ST/STM32_Audio/Addons/PDM/Lib/libPDMFilter_CM7_Keil_wc16.lib</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>APP/Main</GroupName>
           <Files>
             <File>
@@ -713,6 +653,57 @@
               <FileName>PDM_Datacov.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\Component\PDM_Datacov.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>UART_Port.c</FileName>

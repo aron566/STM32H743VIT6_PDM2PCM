@@ -24,7 +24,7 @@ extern "C" {
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_I2S_PERIPHERAL   1/**< 选择是否启用I2S模块*/
+#define ENABLE_I2S_PERIPHERAL   0/**< 选择是否启用I2S模块*/
 
 /*重置接收缓冲大小*/
 #if ENABLE_I2S_PERIPHERAL
@@ -43,7 +43,9 @@ extern "C" {
 #endif
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
+#if ENABLE_I2S_PERIPHERAL
 extern I2S_HandleTypeDef hi2s1;
+#endif
 extern volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
 
 extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
@@ -65,7 +67,7 @@ static volatile uint32_t I2S_DmaCanRead_Flag  = 0;
 *
 ********************************************************************************
 */
-//static void u8tou
+
 /** Public application code --------------------------------------------------*/
 /*******************************************************************************
 *
@@ -73,6 +75,7 @@ static volatile uint32_t I2S_DmaCanRead_Flag  = 0;
 *
 ********************************************************************************
 */
+#if ENABLE_I2S_PERIPHERAL
 /**
   ******************************************************************
   * @brief   I2S半发送完成中断
@@ -132,7 +135,7 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
 
 }
-
+#endif
 /**
   ******************************************************************
   * @brief   I2S接口启动

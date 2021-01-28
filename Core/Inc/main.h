@@ -58,10 +58,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define IRQ_SPEED_TP_Pin GPIO_PIN_0
-#define IRQ_SPEED_TP_GPIO_Port GPIOE
-#define MAIN_SPEED_TP_Pin GPIO_PIN_1
-#define MAIN_SPEED_TP_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

@@ -24,7 +24,7 @@ extern "C" {
 #include <limits.h> /**< need variable max value    */
 /** Private includes ---------------------------------------------------------*/
 #include "SAI_Port.h"
-#include "PDM_Datacov.h"
+//#include "PDM_Datacov.h"
 #include "UART_Port.h"
 #include "uac_init.h"
 #include "I2S_Port.h"

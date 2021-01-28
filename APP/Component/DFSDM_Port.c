@@ -42,12 +42,13 @@ extern "C" {
 /** Private constants --------------------------------------------------------*/
 
 /** Public variables ---------------------------------------------------------*/
+#if ENABLE_DFSDM_PERIPHERAL
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter0;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter1;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter3;
 extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
-
+#endif
 /*USB Microphone数据接收缓冲区*/
 extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
@@ -82,6 +83,7 @@ static int16_t MIC4_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
 *
 ********************************************************************************
 */
+#if ENABLE_DFSDM_PERIPHERAL
 /**
   * @brief  Half regular conversion complete callback. 
   * @param  hdfsdm_filter : DFSDM filter handle.
@@ -111,7 +113,7 @@ void HAL_DFSDM_FilterRegConvCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_filt
   PCM_Data_Ptr[2] = (int16_t*)&Pdm2Pcm_ChannelBuf[2].PCM_Buf[PCM_ONE_SAMPLE_NUM];
   PCM_Data_Ptr[3] = (int16_t*)&Pdm2Pcm_ChannelBuf[3].PCM_Buf[PCM_ONE_SAMPLE_NUM];
 }
-
+#endif
 /**
   ******************************************************************
   * @brief   DFSDM启动PDM转换
@@ -123,16 +125,17 @@ void HAL_DFSDM_FilterRegConvCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_filt
   ******************************************************************
   */
 void DFSDM_Port_Start(void)
-{ 
+{
+#if ENABLE_DFSDM_PERIPHERAL
   if(DFSDM_DmaCanRead_Flag == 0)
   {
     return;
   }
   
-  memcpy((void *)MIC1_Aidio_Buf, (void *)PCM_Data_Ptr[0], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
-  memcpy((void *)MIC2_Aidio_Buf, (void *)PCM_Data_Ptr[1], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
-  memcpy((void *)MIC3_Aidio_Buf, (void *)PCM_Data_Ptr[2], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
-  memcpy((void *)MIC4_Aidio_Buf, (void *)PCM_Data_Ptr[3], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC1_Aidio_Buf, (void *)PCM_Data_Ptr[0], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC2_Aidio_Buf, (void *)PCM_Data_Ptr[1], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC3_Aidio_Buf, (void *)PCM_Data_Ptr[2], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC4_Aidio_Buf, (void *)PCM_Data_Ptr[3], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
   
   /*发送*/
   /*更新USB音频数据*/
@@ -148,6 +151,7 @@ void DFSDM_Port_Start(void)
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
   }
   DFSDM_DmaCanRead_Flag = 0;
+#endif
 }
 
 /**

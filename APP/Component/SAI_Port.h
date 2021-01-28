@@ -46,22 +46,19 @@ typedef struct
 
 /** Exported macros-----------------------------------------------------------*/
 /** Exported variables -------------------------------------------------------*/
-/* Flag定义 */
-extern volatile uint8_t SAI_Transmit_Complete_Flag;
-extern volatile uint8_t SAI_Receive_Complete_Flag;
-extern volatile uint8_t SAI_Can_Send_Data_Flag;
+
 /** Exported functions prototypes --------------------------------------------*/
 
 /*SAI操作初始化*/
 void Sai_Port_Init(void);
+/*SAI启动数据处理*/
+void Sai_Port_Start(void);
 /*SAI数据发送*/
 void Sai_Port_Send_Data(uint8_t *data, uint16_t size);
 /*SAI双缓冲发送*/
 HAL_StatusTypeDef HAL_SAI_MultiMemTransmit_DMA(SAI_HandleTypeDef *hsai, uint8_t *pData, uint8_t *SecondMemAddress, uint16_t Size);
 /*SAI双缓冲接收*/
 HAL_StatusTypeDef HAL_SAI_MultiMemReceive_DMA(SAI_HandleTypeDef *hsai, uint8_t *pData, uint8_t *SecondMemAddress, uint16_t Size);
-
-void Sai_ADC_Data_LoopBack(void);
 
 #ifdef __cplusplus ///<end extern c
 }
