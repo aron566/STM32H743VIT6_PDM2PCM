@@ -5,7 +5,7 @@
  *
  *  @author aron566
  *
- *  @brief sai²Ù×÷½Ó¿Ú-MIC
+ *  @brief saiæ“ä½œæ¥å£-MIC
  *  
  *  @version V1.0
  */
@@ -25,20 +25,20 @@ extern "C" {
 /** Private includes ---------------------------------------------------------*/
 #include "main.h"
 /** Private defines ----------------------------------------------------------*/
-#define MIC_CHANNEL_NUM     (8/2U)                /**< Í¨µÀ×ÜÊı*/
-#define MONO_FRAME_SIZE     (160)                 /**< µ¥ÉùµÀÖ¡´óĞ¡*/
-#define STEREO_FRAME_SIZE   (MONO_FRAME_SIZE*2)   /**< Á¢ÌåÉùÖ¡´óĞ¡*/
-#define PCM_ONE_SAMPLE_NUM  STEREO_FRAME_SIZE     /**< µ¥´ÎPCM×ª»»Ö¡´óĞ¡*/
-#define PCM_TWO_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*2)/**< Á½´ÎPCM×ª»»Ö¡´óĞ¡*/
-#define PDM_ONE_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*4)/**< µ¥´ÎPDM²ÉÑùÖ¡´óĞ¡*/
-#define PDM_TWO_SAMPLE_NUM  (PDM_ONE_SAMPLE_NUM*2)/**< Á½´ÎPDM²ÉÑùÖ¡´óĞ¡*/
+#define MIC_CHANNEL_NUM     (8/2U)                /**< é€šé“æ€»æ•°*/
+#define MONO_FRAME_SIZE     (160)                 /**< å•å£°é“å¸§å¤§å°*/
+#define STEREO_FRAME_SIZE   (MONO_FRAME_SIZE*2)   /**< ç«‹ä½“å£°å¸§å¤§å°*/
+#define PCM_ONE_SAMPLE_NUM  STEREO_FRAME_SIZE     /**< å•æ¬¡PCMè½¬æ¢å¸§å¤§å°*/
+#define PCM_TWO_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*2)/**< ä¸¤æ¬¡PCMè½¬æ¢å¸§å¤§å°*/
+#define PDM_ONE_SAMPLE_NUM  (PCM_ONE_SAMPLE_NUM*4)/**< å•æ¬¡PDMé‡‡æ ·å¸§å¤§å°*/
+#define PDM_TWO_SAMPLE_NUM  (PDM_ONE_SAMPLE_NUM*2)/**< ä¸¤æ¬¡PDMé‡‡æ ·å¸§å¤§å°*/
 
 /** Exported typedefines -----------------------------------------------------*/
-/*PDM×ªPCMÊı¾İ½á¹¹*/
+/*PDMè½¬PCMæ•°æ®ç»“æ„*/
 typedef struct
 {
-  uint16_t PDM_RX_Buf[PDM_TWO_SAMPLE_NUM*2];/**< Ë«»º³åÇø*/
-  uint16_t PDM_One_Sample_Buf[PDM_ONE_SAMPLE_NUM];/**< ·ÖÀëÍ¨µÀÊı¾İ*/
+  uint16_t PDM_RX_Buf[PDM_TWO_SAMPLE_NUM*2];/**< åŒç¼“å†²åŒº*/
+  uint16_t PDM_One_Sample_Buf[PDM_ONE_SAMPLE_NUM];/**< åˆ†ç¦»é€šé“æ•°æ®*/
   int16_t  PCM_Buf[PCM_TWO_SAMPLE_NUM];
   int16_t  PCM_One_Sample_Buf[PCM_ONE_SAMPLE_NUM];
 }PDM2PCM_BUF_Typedef_t;
@@ -49,15 +49,15 @@ typedef struct
 
 /** Exported functions prototypes --------------------------------------------*/
 
-/*SAI²Ù×÷³õÊ¼»¯*/
+/*SAIæ“ä½œåˆå§‹åŒ–*/
 void Sai_Port_Init(void);
-/*SAIÆô¶¯Êı¾İ´¦Àí*/
+/*SAIå¯åŠ¨æ•°æ®å¤„ç†*/
 void Sai_Port_Start(void);
-/*SAIÊı¾İ·¢ËÍ*/
+/*SAIæ•°æ®å‘é€*/
 void Sai_Port_Send_Data(uint8_t *data, uint16_t size);
-/*SAIË«»º³å·¢ËÍ*/
+/*SAIåŒç¼“å†²å‘é€*/
 HAL_StatusTypeDef HAL_SAI_MultiMemTransmit_DMA(SAI_HandleTypeDef *hsai, uint8_t *pData, uint8_t *SecondMemAddress, uint16_t Size);
-/*SAIË«»º³å½ÓÊÕ*/
+/*SAIåŒç¼“å†²æ¥æ”¶*/
 HAL_StatusTypeDef HAL_SAI_MultiMemReceive_DMA(SAI_HandleTypeDef *hsai, uint8_t *pData, uint8_t *SecondMemAddress, uint16_t Size);
 
 #ifdef __cplusplus ///<end extern c

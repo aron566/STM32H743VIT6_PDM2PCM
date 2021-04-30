@@ -5,15 +5,15 @@
  *
  *  @author aron566
  *
- *  @copyright °®ÚĞ¿Æ¼¼ÑĞ¾¿Ôº.
+ *  @copyright çˆ±è°›ç§‘æŠ€ç ”ç©¶é™¢.
  *
- *  @brief sai²Ù×÷½Ó¿Ú-MIC
+ *  @brief saiæ“ä½œæ¥å£-MIC
  *
- *  @details 1¡¢SAI-D1½ÓÊÕÀ´×ÔMC1¡¢MC2Í¨µÀPDMÊı¾İ£¬MC1Êı¾İÏÈ
- *           2¡¢SAI-D2½ÓÊÕÀ´×ÔMC3¡¢MC4Í¨µÀPDMÊı¾İ£¬MC3Êı¾İÏÈ
- *           3¡¢SAI-D3½ÓÊÕÀ´×ÔMC5¡¢MC6Í¨µÀPDMÊı¾İ£¬MC5Êı¾İÏÈ
- *           4¡¢SAI-D4½ÓÊÕÀ´×ÔMC7¡¢MC8Í¨µÀPDMÊı¾İ£¬MC7Êı¾İÏÈ
- *           5¡¢[MC1 16bit][MC2 16bit][MC3 16bit][MC4 16bit][MC5 16bit][MC6 16bit][MC7 16bit][MC8 16bit]
+ *  @details 1ã€SAI-D1æ¥æ”¶æ¥è‡ªMC1ã€MC2é€šé“PDMæ•°æ®ï¼ŒMC1æ•°æ®å…ˆ
+ *           2ã€SAI-D2æ¥æ”¶æ¥è‡ªMC3ã€MC4é€šé“PDMæ•°æ®ï¼ŒMC3æ•°æ®å…ˆ
+ *           3ã€SAI-D3æ¥æ”¶æ¥è‡ªMC5ã€MC6é€šé“PDMæ•°æ®ï¼ŒMC5æ•°æ®å…ˆ
+ *           4ã€SAI-D4æ¥æ”¶æ¥è‡ªMC7ã€MC8é€šé“PDMæ•°æ®ï¼ŒMC7æ•°æ®å…ˆ
+ *           5ã€[MC1 16bit][MC2 16bit][MC3 16bit][MC4 16bit][MC5 16bit][MC6 16bit][MC7 16bit][MC8 16bit]
  *  @version V1.0
  */
 #ifdef __cplusplus ///<use C compiler
@@ -36,9 +36,9 @@ typedef enum
   * @}
   */
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_SAI_PERIPHERAL   1/**< Ñ¡ÔñÊÇ·ñÆôÓÃSAIÄ£¿é*/
+#define ENABLE_SAI_PERIPHERAL   1/**< é€‰æ‹©æ˜¯å¦å¯ç”¨SAIæ¨¡å—*/
 
-/*ÖØÖÃ½ÓÊÕ»º³å´óĞ¡*/
+/*é‡ç½®æ¥æ”¶ç¼“å†²å¤§å°*/
 #if ENABLE_SAI_PERIPHERAL
   #ifdef PCM_ONE_SAMPLE_NUM
     #undef PCM_ONE_SAMPLE_NUM
@@ -57,26 +57,24 @@ extern SAI_HandleTypeDef hsai_BlockB1;
 extern SAI_HandleTypeDef hsai_BlockA2;
 extern SAI_HandleTypeDef hsai_BlockB2;
 
-/*USB MicrophoneÊı¾İ½ÓÊÕ»º³åÇø*/
+/*USB Microphoneæ•°æ®æ¥æ”¶ç¼“å†²åŒº*/
 extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 
-/*ÒôÆµ×ª»»Êı¾İ½ÓÊÕ»º³åÇø*/
-//__attribute__ ((at(0x38000000))) volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM] = {0};
-/*ÒôÆµPCMÊı¾İ½ÓÊÕ»º³åÇø*/
-__attribute__ ((at(0x38000000))) volatile int16_t PCM_ChannelBuf[MIC_CHANNEL_NUM][PCM_TWO_SAMPLE_NUM] = {0};
-
+/*éŸ³é¢‘PCMæ•°æ®æ¥æ”¶ç¼“å†²åŒº*/
+__attribute__ ((at(0x38000000))) volatile int32_t PCM_ChannelBuf[MIC_CHANNEL_NUM][PCM_TWO_SAMPLE_NUM] = {0};
+__attribute__ ((at(0x38000000+sizeof(PCM_ChannelBuf)))) volatile int32_t DAC_Audio_Buf[PCM_TWO_SAMPLE_NUM] = {0};
 /** Private variables --------------------------------------------------------*/
-static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
+static int32_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
 static volatile uint32_t SAI_DmaCanRead_Flag  = 0;
-
-static int16_t MIC1_2_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
-static int16_t MIC3_4_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
-static int16_t MIC5_6_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
-static int16_t MIC7_8_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+static int32_t *DAC_Audio_Data_Ptr = (int32_t *)DAC_Audio_Buf;
+static int32_t MIC1_2_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+static int32_t MIC3_4_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+static int32_t MIC5_6_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+static int32_t MIC7_8_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
 /** Private function prototypes ----------------------------------------------*/
-/*ÖĞ¶Ï»Øµ÷*/
+/*ä¸­æ–­å›è°ƒ*/
 static void HAL_SAI_TxBuf0CpltCallback(DMA_HandleTypeDef *hdma);
 static void HAL_SAI_TxBuf1CpltCallback(DMA_HandleTypeDef *hdma);
 static void HAL_SAI_RxBuf0CpltCallback(DMA_HandleTypeDef *hdma);
@@ -95,8 +93,8 @@ static uint32_t SAI_InterruptFlag(const SAI_HandleTypeDef *hsai, SAI_ModeTypedef
 
 /**
   ******************************************************************
-  * @brief   SAI_TX_Buf_0·¢ËÍÍê³ÉÖĞ¶Ï
-  * @param   [in]hdma dma¾ä±ú
+  * @brief   SAI_TX_Buf_0å‘é€å®Œæˆä¸­æ–­
+  * @param   [in]hdma dmaå¥æŸ„
   * @return  None.
   * @author  zgl
   * @version V1.0
@@ -110,8 +108,8 @@ static void HAL_SAI_TxBuf0CpltCallback(DMA_HandleTypeDef *hdma)
 
 /**
   ******************************************************************
-  * @brief   SAI_TX_Buf_1·¢ËÍÍê³ÉÖĞ¶Ï
-  * @param   [in]hdma dma¾ä±ú
+  * @brief   SAI_TX_Buf_1å‘é€å®Œæˆä¸­æ–­
+  * @param   [in]hdma dmaå¥æŸ„
   * @return  None.
   * @author  zgl
   * @version V1.0
@@ -125,8 +123,8 @@ static void HAL_SAI_TxBuf1CpltCallback(DMA_HandleTypeDef *hdma)
 
 /**
   ******************************************************************
-  * @brief   SAI_RX_Buf_0½ÓÊÕÍê³ÉÖĞ¶Ï
-  * @param   [in]hdma dma¾ä±ú
+  * @brief   SAI_RX_Buf_0æ¥æ”¶å®Œæˆä¸­æ–­
+  * @param   [in]hdma dmaå¥æŸ„
   * @return  None.
   * @author  zgl
   * @version V1.0
@@ -140,8 +138,8 @@ static void HAL_SAI_RxBuf0CpltCallback(DMA_HandleTypeDef *hdma)
 
 /**
   ******************************************************************
-  * @brief   SAI_RX_Buf_1½ÓÊÕÍê³ÉÖĞ¶Ï
-  * @param   [in]hdma dma¾ä±ú
+  * @brief   SAI_RX_Buf_1æ¥æ”¶å®Œæˆä¸­æ–­
+  * @param   [in]hdma dmaå¥æŸ„
   * @return  None.
   * @author  zgl
   * @version V1.0
@@ -155,7 +153,7 @@ static void HAL_SAI_RxBuf1CpltCallback(DMA_HandleTypeDef *hdma)
 
 /**
   ******************************************************************
-  * @brief   SAIÖĞ¶Ï±êÊ¶
+  * @brief   SAIä¸­æ–­æ ‡è¯†
   * @param   [in]None
   * @return  HAL_StatusTypeDef
   * @author  zgl
@@ -200,11 +198,11 @@ static uint32_t SAI_InterruptFlag(const SAI_HandleTypeDef *hsai, SAI_ModeTypedef
 
 /**
   ******************************************************************
-  * @brief   SAIË«»º³å·¢ËÍ
-  * @param   [in]hsai sai¾ä±ú
-  * @param   [in]pData DMA·¢ËÍÊı¾İµØÖ·1
-  * @param   [in]SecondMemAddress DMA·¢ËÍÊı¾İµØÖ·2
-  * @param   [in]Size ·¢ËÍÊı¾İ´óĞ¡
+  * @brief   SAIåŒç¼“å†²å‘é€
+  * @param   [in]hsai saiå¥æŸ„
+  * @param   [in]pData DMAå‘é€æ•°æ®åœ°å€1
+  * @param   [in]SecondMemAddress DMAå‘é€æ•°æ®åœ°å€2
+  * @param   [in]Size å‘é€æ•°æ®å¤§å°
   * @return  HAL_StatusTypeDef
   * @author  zgl
   * @version V1.0
@@ -293,11 +291,11 @@ HAL_StatusTypeDef HAL_SAI_MultiMemTransmit_DMA(SAI_HandleTypeDef *hsai, uint8_t 
 
 /**
   ******************************************************************
-  * @brief   SAIË«»º³å½ÓÊÕ
-  * @param   [in]hsai sai¾ä±ú
-  * @param   [in]pData DMA½ÓÊÕµØÖ·1
-  * @param   [in]SecondMemAddress DMA½ÓÊÕµØÖ·2
-  * @param   [in]Size ½ÓÊÕ´óĞ¡
+  * @brief   SAIåŒç¼“å†²æ¥æ”¶
+  * @param   [in]hsai saiå¥æŸ„
+  * @param   [in]pData DMAæ¥æ”¶åœ°å€1
+  * @param   [in]SecondMemAddress DMAæ¥æ”¶åœ°å€2
+  * @param   [in]Size æ¥æ”¶å¤§å°
   * @return  HAL_StatusTypeDef
   * @author  zgl
   * @version V1.0
@@ -368,8 +366,8 @@ HAL_StatusTypeDef HAL_SAI_MultiMemReceive_DMA(SAI_HandleTypeDef *hsai, uint8_t *
 
 /**
   ******************************************************************
-  * @brief   Ç¿¶¨ÒåSAI°ë½ÓÊÕÍê³ÉÖĞ¶Ï
-  * @param   [in]hsai sai¾ä±ú
+  * @brief   å¼ºå®šä¹‰SAIåŠæ¥æ”¶å®Œæˆä¸­æ–­
+  * @param   [in]hsai saiå¥æŸ„
   * @return  None.
   * @author  aron566
   * @version V1.0
@@ -379,16 +377,22 @@ HAL_StatusTypeDef HAL_SAI_MultiMemReceive_DMA(SAI_HandleTypeDef *hsai, uint8_t *
 void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai)
 {
   SAI_DmaCanRead_Flag = 1;
-  PCM_Data_Ptr[0] = (int16_t*)PCM_ChannelBuf[0];
-  PCM_Data_Ptr[1] = (int16_t*)PCM_ChannelBuf[1];
+  if(hsai == &hsai_BlockA2)
+  {
+    PCM_Data_Ptr[0] = (int16_t*)&PCM_ChannelBuf[0][0];
+  }
+  if(hsai == &hsai_BlockB1)
+  {
+    PCM_Data_Ptr[1] = (int16_t*)&PCM_ChannelBuf[1][0];
+  }
   PCM_Data_Ptr[2] = (int16_t*)PCM_ChannelBuf[2];
   PCM_Data_Ptr[3] = (int16_t*)PCM_ChannelBuf[3];
 }
 
 /**
   ******************************************************************
-  * @brief   Ç¿¶¨ÒåSAI½ÓÊÕÍê³ÉÖĞ¶Ï
-  * @param   [in]hsai sai¾ä±ú
+  * @brief   å¼ºå®šä¹‰SAIæ¥æ”¶å®Œæˆä¸­æ–­
+  * @param   [in]hsai saiå¥æŸ„
   * @return  None.
   * @author  aron566
   * @version V1.0
@@ -398,17 +402,55 @@ void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai)
 void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef *hsai)
 {
   SAI_DmaCanRead_Flag = 1;
-  PCM_Data_Ptr[0] = (int16_t*)&PCM_ChannelBuf[0][PCM_ONE_SAMPLE_NUM];
-  PCM_Data_Ptr[1] = (int16_t*)&PCM_ChannelBuf[1][PCM_ONE_SAMPLE_NUM];
-  PCM_Data_Ptr[2] = (int16_t*)&PCM_ChannelBuf[2][PCM_ONE_SAMPLE_NUM];
-  PCM_Data_Ptr[3] = (int16_t*)&PCM_ChannelBuf[3][PCM_ONE_SAMPLE_NUM];
+  if(hsai == &hsai_BlockA2)
+  {
+    PCM_Data_Ptr[0] = (int32_t*)&PCM_ChannelBuf[0][PCM_ONE_SAMPLE_NUM];
+  }
+  if(hsai == &hsai_BlockB1)
+  {
+    PCM_Data_Ptr[1] = (int32_t*)&PCM_ChannelBuf[1][PCM_ONE_SAMPLE_NUM];
+  }
+  PCM_Data_Ptr[2] = (int32_t*)&PCM_ChannelBuf[2][PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[3] = (int32_t*)&PCM_ChannelBuf[3][PCM_ONE_SAMPLE_NUM];
 }
 
 /**
   ******************************************************************
-  * @brief   SAI·¢ËÍÊı¾İ
-  * @param   [in]data Êı¾İ
-  * @param   [in]Size ÒÔÔÚCubeMXÉÏÅäÖÃµÄµ¥Î»ÊıÁ¿£¬ÅäÖÃ°ë×Ö£¬ÕâÀïĞ´1¾Í´«Êä1¸ö°ë×Ö
+  * @brief   å¼ºå®šä¹‰SAIå‘é€å®Œæˆä¸­æ–­
+  * @param   [in]hsai saiå¥æŸ„
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-19
+  ******************************************************************
+  */
+void HAL_SAI_TxHalfCpltCallback(SAI_HandleTypeDef *hsai)
+{
+  UNUSED(hsai);
+  DAC_Audio_Data_Ptr = (int32_t *)&DAC_Audio_Buf[0];
+}
+
+/**
+  ******************************************************************
+  * @brief   å¼ºå®šä¹‰SAIå‘é€å®Œæˆä¸­æ–­
+  * @param   [in]hsai saiå¥æŸ„
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2021-01-19
+  ******************************************************************
+  */
+void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef *hsai)
+{
+  UNUSED(hsai);
+  DAC_Audio_Data_Ptr = (int32_t *)&DAC_Audio_Buf[PCM_ONE_SAMPLE_NUM];
+}
+
+/**
+  ******************************************************************
+  * @brief   SAIå‘é€æ•°æ®
+  * @param   [in]data æ•°æ®
+  * @param   [in]Size ä»¥åœ¨CubeMXä¸Šé…ç½®çš„å•ä½æ•°é‡ï¼Œé…ç½®åŠå­—ï¼Œè¿™é‡Œå†™1å°±ä¼ è¾“1ä¸ªåŠå­—
   * @return  None.
   * @author  aron566
   * @version V1.0
@@ -423,7 +465,7 @@ void Sai_Port_Send_Data(uint8_t *data, uint16_t size)
 
 /**
   ******************************************************************
-  * @brief   SAIÆô¶¯Êı¾İ´¦Àí
+  * @brief   SAIå¯åŠ¨æ•°æ®å¤„ç†
   * @param   [in]None.
   * @return  None.
   * @author  aron566
@@ -438,37 +480,33 @@ void Sai_Port_Start(void)
     return; 
   }
 
-  memmove(MIC1_2_STEREO_Aidio_TempBuf, PCM_Data_Ptr[0], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
-  memmove(MIC3_4_STEREO_Aidio_TempBuf, PCM_Data_Ptr[1], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
-  memmove(MIC5_6_STEREO_Aidio_TempBuf, PCM_Data_Ptr[2], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
-  memmove(MIC7_8_STEREO_Aidio_TempBuf, PCM_Data_Ptr[3], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC1_2_STEREO_Aidio_TempBuf, PCM_Data_Ptr[0], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC3_4_STEREO_Aidio_TempBuf, PCM_Data_Ptr[1], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC5_6_STEREO_Aidio_TempBuf, PCM_Data_Ptr[2], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC7_8_STEREO_Aidio_TempBuf, PCM_Data_Ptr[3], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
   
-  /*·ÖÀëÍ¨µÀÊı¾İ£ºL-R-L-R-L-R......*/
-//  for(int i = 0; i < MONO_FRAME_SIZE; i++)
-//  {
-//    MIC7_Aidio_TempBuf[i] = STEREO_Aidio_TempBuf[i*2];
-//    MIC8_Aidio_TempBuf[i] = STEREO_Aidio_TempBuf[i*2+1];
-//  }
-
-  /*·¢ËÍ*/
-  /*¸üĞÂUSBÒôÆµÊı¾İ*/
+  /*å‘é€*/
+  /*æ›´æ–°USBéŸ³é¢‘æ•°æ®*/
   for(int i = 0; i < MONO_FRAME_SIZE; i++)
   {
-    g_UACRingBuf[g_UACWriteIndex] = MIC5_6_STEREO_Aidio_TempBuf[i*2];
+    g_UACRingBuf[g_UACWriteIndex] = (int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2]>>8);//MIC1_2_STEREO_Aidio_TempBuf[i*2];//
     g_UACWriteIndex++;
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
-
-    g_UACRingBuf[g_UACWriteIndex] = MIC5_6_STEREO_Aidio_TempBuf[i*2+1];
+    
+    g_UACRingBuf[g_UACWriteIndex] = (int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2+1]>>8);//MIC1_2_STEREO_Aidio_TempBuf[i*2+1];//
     g_UACWriteIndex++;
-
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
+    
+    /*TO DAC*/
+    DAC_Audio_Data_Ptr[i*2] = MIC1_2_STEREO_Aidio_TempBuf[i*2];//(int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2]>>8);
+    DAC_Audio_Data_Ptr[i*2+1] = MIC1_2_STEREO_Aidio_TempBuf[i*2+1];//(int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2+1]>>8);
   }
   SAI_DmaCanRead_Flag = 0;
 }
 
 /**
   ******************************************************************
-  * @brief   SAI²Ù×÷³õÊ¼»¯
+  * @brief   SAIæ“ä½œåˆå§‹åŒ–
   * @param   [in]None
   * @return  None.
   * @author  aron566
@@ -479,14 +517,10 @@ void Sai_Port_Start(void)
 void Sai_Port_Init(void)
 {
 #if ENABLE_SAI_PERIPHERAL
-  /*Æô¶¯SAI3 DMA Ë«»º³å½ÓÊÕ,Ë«ÉùµÀ´óĞ¡*/
-  //HAL_SAI_MultiMemReceive_DMA(&hsai_BlockA1, (uint8_t*)Pdm2Pcm_ChannelBuf[0].PCM_Buf, (uint8_t *)((int16_t *)(Pdm2Pcm_ChannelBuf[0].PCM_Buf+PCM_ONE_SAMPLE_NUM)), sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
-
-  /*Æô¶¯SAI DMAÊı¾İ½ÓÊÕ*/
-  HAL_SAI_Receive_DMA(&hsai_BlockA1, (uint8_t*)PCM_ChannelBuf[0], PCM_TWO_SAMPLE_NUM);
+  /*å¯åŠ¨SAI DMAæ•°æ®æ¥æ”¶*/
+  HAL_SAI_Receive_DMA(&hsai_BlockA2, (uint8_t*)PCM_ChannelBuf[0], PCM_TWO_SAMPLE_NUM);
   HAL_SAI_Receive_DMA(&hsai_BlockB1, (uint8_t*)PCM_ChannelBuf[1], PCM_TWO_SAMPLE_NUM);
-  //HAL_SAI_Receive_DMA(&hsai_BlockA2, (uint8_t*)PCM_ChannelBuf[2], PCM_TWO_SAMPLE_NUM);
-  HAL_SAI_Receive_DMA(&hsai_BlockB2, (uint8_t*)PCM_ChannelBuf[3], PCM_TWO_SAMPLE_NUM);
+  HAL_SAI_Transmit_DMA(&hsai_BlockA1, (uint8_t*)DAC_Audio_Buf, PCM_TWO_SAMPLE_NUM);
 #endif
 }
 

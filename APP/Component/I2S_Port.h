@@ -34,9 +34,9 @@ extern "C" {
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 
-/*I2S½Ó¿Ú³õÊ¼»¯*/
+/*I2Sæ¥å£åˆå§‹åŒ–*/
 void I2S_Port_Init(void);
-/*I2S½Ó¿ÚÆô¶¯*/
+/*I2Sæ¥å£å¯åŠ¨*/
 void I2S_Port_Start(void);
 
 #ifdef __cplusplus ///<end extern c

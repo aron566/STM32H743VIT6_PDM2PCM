@@ -5,7 +5,7 @@
  *
  *  @author aron566
  *
- *  @brief ¶¨Ê±Æ÷½Ó¿Ú
+ *  @brief å®šæ—¶å™¨æ¥å£
  *  
  *  @version V1.0
  */
@@ -23,11 +23,11 @@ extern "C" {
 #include <string.h>
 #include <limits.h> /**< need variable max value    */
 /** Private includes ---------------------------------------------------------*/
-#include "tim.h"
+
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/
-/*¶¨Ê±Æ÷Ê±¼äµ¥Î»*/
+/*å®šæ—¶å™¨æ—¶é—´å•ä½*/
 typedef enum
 {
   TIMER_SEC = 0,
@@ -39,12 +39,12 @@ typedef enum
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 
-/*³õÊ¼»¯¶¨Ê±Æ÷*/
+/*å®šæ—¶å™¨æ¥å£åˆå§‹åŒ–*/
 void Timer_Port_Init(void);
-/*»ñÈ¡ÔËĞĞÊ±¼ä*/
+/*å®šæ—¶å™¨æ¥å£å¯åŠ¨*/
+void Timer_Port_Start(void);
+/*è·å–è¿è¡Œæ—¶é—´*/
 uint32_t Timer_Port_Get_Current_Time(TIMER_TIME_UNIT_Typedef_t time_unit);
-/*¶¨Ê±Æ÷ÖĞ¶Ï»Øµ÷*/
-void Timer_Port_IRQHandler(TIM_HandleTypeDef *htimx);
 
 #ifdef __cplusplus ///<end extern c
 }

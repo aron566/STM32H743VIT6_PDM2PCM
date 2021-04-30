@@ -5,16 +5,16 @@
  *
  *  @author aron566
  *
- *  @copyright °®ÚĞ¿Æ¼¼ÑĞ¾¿Ôº.
+ *  @copyright çˆ±è°›ç§‘æŠ€ç ”ç©¶é™¢.
  *
- *  @brief DFSDM²Ù×÷½Ó¿Ú£ºPDM×ªPCM
+ *  @brief DFSDMæ“ä½œæ¥å£ï¼šPDMè½¬PCM
  *
- *  @details 1¡¢Í¨µÀ0ºÍÍ¨µÀ1Ö¸Êı¾İ½ÓÈë£¬ÎïÀíÁ¬½Ó-->¹²ÓÃÍ¨µÀ1¿Ú-->·ÖÀëµ½¸÷×ÔÂË²¨Æ÷×ª³öPCMÊı¾İ£¨ÂË²¨Æ÷0½ÓÍ¨µÀ0£¬ÂË²¨Æ÷1½ÓÍ¨µÀ1£©
- *           2¡¢Í¨µÀ2ºÍÍ¨µÀ3Ö¸Êı¾İ½ÓÈë£¬ÎïÀíÁ¬½Ó-->¹²ÓÃÍ¨µÀ3¿Ú-->·ÖÀëµ½¸÷×ÔÂË²¨Æ÷×ª³öPCMÊı¾İ£¨ÂË²¨Æ÷2½ÓÍ¨µÀ2£¬ÂË²¨Æ÷3½ÓÍ¨µÀ3£©
- *           3¡¢Í¨µÀ4ºÍÍ¨µÀ5Ö¸Êı¾İ½ÓÈë£¬ÎïÀíÁ¬½Ó-->¹²ÓÃÍ¨µÀ5¿Ú-->·ÖÀëµ½¸÷×ÔÂË²¨Æ÷×ª³öPCMÊı¾İ£¨ÎŞÂË²¨Æ÷¿ÉÓÃ£©
- *           4¡¢Í¨µÀ6ºÍÍ¨µÀ7Ö¸Êı¾İ½ÓÈë£¬ÎïÀíÁ¬½Ó-->¹²ÓÃÍ¨µÀ7¿Ú-->·ÖÀëµ½¸÷×ÔÂË²¨Æ÷×ª³öPCMÊı¾İ£¨ÎŞÂË²¨Æ÷¿ÉÓÃ£©
- *           5¡¢²ÉÑùÂÊ = Ê±ÖÓÔ´/·ÖÆµÖµ/(Fosr*Iosr) == 16khz = 2048000hz/2/(64*1)
- *           6¡¢Å¼ÊıÍ¨µÀºÅ£¬²É¼¯ÉÏÉıÑØÊı¾İ¼´SEL½ÓGNDµÄMICÉè±¸
+ *  @details 1ã€é€šé“0å’Œé€šé“1æŒ‡æ•°æ®æ¥å…¥ï¼Œç‰©ç†è¿æ¥-->å…±ç”¨é€šé“1å£-->åˆ†ç¦»åˆ°å„è‡ªæ»¤æ³¢å™¨è½¬å‡ºPCMæ•°æ®ï¼ˆæ»¤æ³¢å™¨0æ¥é€šé“0ï¼Œæ»¤æ³¢å™¨1æ¥é€šé“1ï¼‰
+ *           2ã€é€šé“2å’Œé€šé“3æŒ‡æ•°æ®æ¥å…¥ï¼Œç‰©ç†è¿æ¥-->å…±ç”¨é€šé“3å£-->åˆ†ç¦»åˆ°å„è‡ªæ»¤æ³¢å™¨è½¬å‡ºPCMæ•°æ®ï¼ˆæ»¤æ³¢å™¨2æ¥é€šé“2ï¼Œæ»¤æ³¢å™¨3æ¥é€šé“3ï¼‰
+ *           3ã€é€šé“4å’Œé€šé“5æŒ‡æ•°æ®æ¥å…¥ï¼Œç‰©ç†è¿æ¥-->å…±ç”¨é€šé“5å£-->åˆ†ç¦»åˆ°å„è‡ªæ»¤æ³¢å™¨è½¬å‡ºPCMæ•°æ®ï¼ˆæ— æ»¤æ³¢å™¨å¯ç”¨ï¼‰
+ *           4ã€é€šé“6å’Œé€šé“7æŒ‡æ•°æ®æ¥å…¥ï¼Œç‰©ç†è¿æ¥-->å…±ç”¨é€šé“7å£-->åˆ†ç¦»åˆ°å„è‡ªæ»¤æ³¢å™¨è½¬å‡ºPCMæ•°æ®ï¼ˆæ— æ»¤æ³¢å™¨å¯ç”¨ï¼‰
+ *           5ã€é‡‡æ ·ç‡ = æ—¶é’Ÿæº/åˆ†é¢‘å€¼/(Fosr*Iosr) == 16khz = 2048000hz/2/(64*1)
+ *           6ã€å¶æ•°é€šé“å·ï¼Œé‡‡é›†ä¸Šå‡æ²¿æ•°æ®å³SELæ¥GNDçš„MICè®¾å¤‡
  *
  *  @version V1.0
  */
@@ -28,9 +28,9 @@ extern "C" {
 #include "usbd_audio.h"
 /** Private typedef ----------------------------------------------------------*/
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_DFSDM_PERIPHERAL   0/**< Ñ¡ÔñÊÇ·ñÆôÓÃDFSDMÄ£¿é*/
+#define ENABLE_DFSDM_PERIPHERAL   0/**< é€‰æ‹©æ˜¯å¦å¯ç”¨DFSDMæ¨¡å—*/
 
-/*ÖØÖÃ½ÓÊÕ»º³å´óĞ¡*/
+/*é‡ç½®æ¥æ”¶ç¼“å†²å¤§å°*/
 #if ENABLE_DFSDM_PERIPHERAL
   #ifdef PCM_ONE_SAMPLE_NUM
     #undef PCM_ONE_SAMPLE_NUM
@@ -49,20 +49,20 @@ extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter3;
 extern PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM];
 #endif
-/*USB MicrophoneÊı¾İ½ÓÊÕ»º³åÇø*/
+/*USB Microphoneæ•°æ®æ¥æ”¶ç¼“å†²åŒº*/
 extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 /** Private variables --------------------------------------------------------*/
-/*DFSDMÊı¾İ½ÓÊÕ±êÖ¾*/
+/*DFSDMæ•°æ®æ¥æ”¶æ ‡å¿—*/
 static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
 static volatile uint32_t DFSDM_DmaCanRead_Flag  = 0;
 
-/*4MICÊı¾İ¿½±´»º³åÇø*/
-static int16_t MIC1_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
-static int16_t MIC2_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
-static int16_t MIC3_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
-static int16_t MIC4_Aidio_Buf[PCM_ONE_SAMPLE_NUM]= {0};
+/*4MICæ•°æ®æ‹·è´ç¼“å†²åŒº*/
+static int16_t MIC1_Audio_Buf[PCM_ONE_SAMPLE_NUM] = {0};
+static int16_t MIC2_Audio_Buf[PCM_ONE_SAMPLE_NUM] = {0};
+static int16_t MIC3_Audio_Buf[PCM_ONE_SAMPLE_NUM] = {0};
+static int16_t MIC4_Audio_Buf[PCM_ONE_SAMPLE_NUM] = {0};
 
 /** Private function prototypes ----------------------------------------------*/
 
@@ -116,7 +116,7 @@ void HAL_DFSDM_FilterRegConvCpltCallback(DFSDM_Filter_HandleTypeDef *hdfsdm_filt
 #endif
 /**
   ******************************************************************
-  * @brief   DFSDMÆô¶¯PDM×ª»»
+  * @brief   DFSDMå¯åŠ¨PDMè½¬æ¢
   * @param   [in]None.
   * @return  None.
   * @author  aron566
@@ -132,20 +132,20 @@ void DFSDM_Port_Start(void)
     return;
   }
   
-  memmove((void *)MIC1_Aidio_Buf, (void *)PCM_Data_Ptr[0], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
-  memmove((void *)MIC2_Aidio_Buf, (void *)PCM_Data_Ptr[1], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
-  memmove((void *)MIC3_Aidio_Buf, (void *)PCM_Data_Ptr[2], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
-  memmove((void *)MIC4_Aidio_Buf, (void *)PCM_Data_Ptr[3], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC1_Audio_Buf, (void *)PCM_Data_Ptr[0], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC2_Audio_Buf, (void *)PCM_Data_Ptr[1], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC3_Audio_Buf, (void *)PCM_Data_Ptr[2], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
+  memmove((void *)MIC4_Audio_Buf, (void *)PCM_Data_Ptr[3], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);	
   
-  /*·¢ËÍ*/
-  /*¸üĞÂUSBÒôÆµÊı¾İ*/
+  /*å‘é€*/
+  /*æ›´æ–°USBéŸ³é¢‘æ•°æ®*/
   for(int i = 0; i < PCM_ONE_SAMPLE_NUM; i++)
   {
-    g_UACRingBuf[g_UACWriteIndex] = MIC1_Aidio_Buf[i];
+    g_UACRingBuf[g_UACWriteIndex] = MIC1_Audio_Buf[i];
     g_UACWriteIndex++;
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
 
-    g_UACRingBuf[g_UACWriteIndex] = MIC2_Aidio_Buf[i];
+    g_UACRingBuf[g_UACWriteIndex] = MIC2_Audio_Buf[i];
     g_UACWriteIndex++;
 
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
@@ -156,7 +156,7 @@ void DFSDM_Port_Start(void)
 
 /**
   ******************************************************************
-  * @brief   DFSDM³õÊ¼»¯
+  * @brief   DFSDMåˆå§‹åŒ–
   * @param   [in]None.
   * @return  None.
   * @author  aron566
@@ -167,25 +167,25 @@ void DFSDM_Port_Start(void)
 void DFSDM_Port_Init(void)
 {
 #if ENABLE_DFSDM_PERIPHERAL
-	/*Æô¶¯Í¨µÀ0²ÉÑù*/	
+	/*å¯åŠ¨é€šé“0é‡‡æ ·*/	
   if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter0, (int16_t *)(Pdm2Pcm_ChannelBuf[0].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
   {
     Error_Handler();
   }
 
-  /*Æô¶¯Í¨µÀ1²ÉÑù*/		
+  /*å¯åŠ¨é€šé“1é‡‡æ ·*/		
   if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter1, (int16_t *)(Pdm2Pcm_ChannelBuf[1].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
   {
     Error_Handler();
   }
   
-  /*Æô¶¯Í¨µÀ2²ÉÑù*/	
+  /*å¯åŠ¨é€šé“2é‡‡æ ·*/	
   if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter2, (int16_t *)(Pdm2Pcm_ChannelBuf[2].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
   {
     Error_Handler();
   }
   
-  /*Æô¶¯Í¨µÀ3²ÉÑù*/	
+  /*å¯åŠ¨é€šé“3é‡‡æ ·*/	
   if(HAL_DFSDM_FilterRegularMsbStart_DMA(&hdfsdm1_filter3, (int16_t *)(Pdm2Pcm_ChannelBuf[3].PCM_Buf), PCM_TWO_SAMPLE_NUM) == HAL_ERROR)
   {
     Error_Handler();

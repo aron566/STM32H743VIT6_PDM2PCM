@@ -5,9 +5,9 @@
  *
  *  @author aron566
  *
- *  @copyright °®ÚĞ¿Æ¼¼ÑĞ¾¿Ôº.
+ *  @copyright çˆ±è°›ç§‘æŠ€ç ”ç©¶é™¢.
  *
- *  @brief ´®¿Ú²Ù×÷
+ *  @brief ä¸²å£æ“ä½œ
  *
  *  @details None.
  *
@@ -16,7 +16,7 @@
 #ifdef __cplusplus //use C compiler
 extern "C" {
 #endif
-#include "UART_Port.h"/*Íâ²¿½Ó¿Ú*/
+#include "UART_Port.h"/*å¤–éƒ¨æ¥å£*/
 /* External variables --------------------------------------------------------*/
 //extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
@@ -40,8 +40,8 @@ extern DMA_HandleTypeDef hdma_usart2_rx;
 /** Private macros -----------------------------------------------------------*/
 #define USE_LOOPBACK 	0
 #define DEBUG_UART		&huart2
-#define UART_MAX_NUM    6/**< ×î´óÔÊĞí´®¿ÚÊıÁ¿*/
-/*¶¨ÒåÄÚ´æ¹ÜÀí½Ó¿Ú*/
+#define UART_MAX_NUM    6/**< æœ€å¤§å…è®¸ä¸²å£æ•°é‡*/
+/*å®šä¹‰å†…å­˜ç®¡ç†æ¥å£*/
 #if !defined(uartport_malloc) && !defined(uartport_free)
 #define uartport_malloc  malloc//pvPortMalloc
 #define uartport_free  free//vPortFree
@@ -50,7 +50,7 @@ extern DMA_HandleTypeDef hdma_usart2_rx;
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 /** Private variables --------------------------------------------------------*/
-/*Ô¤¶¨Òå´®¿ÚÉè±¸ĞÅÏ¢*/
+/*é¢„å®šä¹‰ä¸²å£è®¾å¤‡ä¿¡æ¯*/
 static Uart_Dev_Handle_t *Uart_pDevice[UART_MAX_NUM+1];
 /** Private function prototypes ----------------------------------------------*/
 static uint8_t Get_Uart_Index(USART_TypeDef *Instance);
@@ -72,18 +72,18 @@ static Uart_Dev_Handle_t *Create_Uart_Dev(Uart_num_t uart_num, UART_HandleTypeDe
 /*
  * 
  *
- * ²ÎÊı£º´®¿ÚºÅ ´®¿ÚÉè±¸Ö¸Õë dma²Ù×÷µØÖ· £¬ÁÙÊ±»º³å´óĞ¡ ½ÓÊÕ¶ÓÁĞ´óĞ¡ ¹¤×÷Ä£Ê½ ¶şÖµĞÅºÅÁ¿
+ * å‚æ•°ï¼šä¸²å£å· ä¸²å£è®¾å¤‡æŒ‡é’ˆ dmaæ“ä½œåœ°å€ ï¼Œä¸´æ—¶ç¼“å†²å¤§å° æ¥æ”¶é˜Ÿåˆ—å¤§å° å·¥ä½œæ¨¡å¼ äºŒå€¼ä¿¡å·é‡
  */
 /************************************************************
-  * @brief   ½¨Á¢´®¿ÚÉè±¸£¬ÎªÆä½¨Á¢Ë«»º³åÇø-->Ê¹ÄÜ´®¿Ú¿ÕÏĞÖĞ¶Ï
-  * @param   [in]uart_num ´®¿ÚºÅ.
-  * @param   [in]huart    ´®¿Ú¾ä±ú.
-  * @param   [in]hdma_rx  ´®¿Údma¾ä±ú.
-  * @param   [in]rx_temp_size  ´®¿ÚÁÙÊ±»º´æ´óĞ¡.
-  * @param   [in]rxsize   ´®¿Ú½ÓÊÕ»º´æ´óĞ¡.
-  * @param   [in]work_mode ´®¿Ú¹¤×÷Ä£Ê½.
-  * @param   [in]pRX_Sem  ´®¿Ú½ÓÊÕĞÅºÅÁ¿.  
-  * @return  ´®¿Ú²Ù×÷¾ä±ú.
+  * @brief   å»ºç«‹ä¸²å£è®¾å¤‡ï¼Œä¸ºå…¶å»ºç«‹åŒç¼“å†²åŒº-->ä½¿èƒ½ä¸²å£ç©ºé—²ä¸­æ–­
+  * @param   [in]uart_num ä¸²å£å·.
+  * @param   [in]huart    ä¸²å£å¥æŸ„.
+  * @param   [in]hdma_rx  ä¸²å£dmaå¥æŸ„.
+  * @param   [in]rx_temp_size  ä¸²å£ä¸´æ—¶ç¼“å­˜å¤§å°.
+  * @param   [in]rxsize   ä¸²å£æ¥æ”¶ç¼“å­˜å¤§å°.
+  * @param   [in]work_mode ä¸²å£å·¥ä½œæ¨¡å¼.
+  * @param   [in]pRX_Sem  ä¸²å£æ¥æ”¶ä¿¡å·é‡.  
+  * @return  ä¸²å£æ“ä½œå¥æŸ„.
   * @author  aron566
   * @date    2020/3/15
   * @version v1.0
@@ -112,17 +112,17 @@ static Uart_Dev_Handle_t *Create_Uart_Dev(Uart_num_t uart_num ,UART_HandleTypeDe
     pUart_Dev->pRX_Sem = pRX_Sem;
 #endif
     Uart_pDevice[uart_num] = pUart_Dev;
-    //´ò¿ª¿ÕÏĞÖĞ¶Ï
+    //æ‰“å¼€ç©ºé—²ä¸­æ–­
     __HAL_UART_ENABLE_IT(huart,UART_IT_IDLE);
-    //Ê¹ÄÜDMA½ÓÊÕ
+    //ä½¿èƒ½DMAæ¥æ”¶
     HAL_UART_Receive_DMA(huart, pUart_Dev->RX_Buff_Temp, pUart_Dev->MAX_RX_Temp);
     return pUart_Dev;
 }
 
 /************************************************************
-  * @brief   »ñµÃµ±Ç°´®¿ÚĞÅÏ¢Ë÷Òı
-  * @param   [in]Instance ´®¿Ú¾ä±ú.
-  * @return  Ë÷ÒıºÅ.
+  * @brief   è·å¾—å½“å‰ä¸²å£ä¿¡æ¯ç´¢å¼•
+  * @param   [in]Instance ä¸²å£å¥æŸ„.
+  * @return  ç´¢å¼•å·.
   * @author  aron566
   * @date    2020/3/15
   * @version v1.0
@@ -170,37 +170,37 @@ void USER_UART_IRQHandler(UART_HandleTypeDef *huart)
         if((__HAL_UART_GET_FLAG(Uart_pDevice[index]->phuart ,UART_FLAG_IDLE) != RESET))
         {
           /*
-          Ê×ÏÈÍ£Ö¹DMA´«Êä£¬
-          1.·ÀÖ¹ºóÃæÓÖÓĞÊı¾İ½ÓÊÕµ½£¬²úÉú¸ÉÈÅ£¬ÒòÎª´ËÊ±µÄÊı¾İ»¹Î´´¦Àí¡£
-          2.DMAĞèÒªÖØĞÂÅäÖÃ¡£
+          é¦–å…ˆåœæ­¢DMAä¼ è¾“ï¼Œ
+          1.é˜²æ­¢åé¢åˆæœ‰æ•°æ®æ¥æ”¶åˆ°ï¼Œäº§ç”Ÿå¹²æ‰°ï¼Œå› ä¸ºæ­¤æ—¶çš„æ•°æ®è¿˜æœªå¤„ç†ã€‚
+          2.DMAéœ€è¦é‡æ–°é…ç½®ã€‚
           */
           HAL_UART_DMAStop(Uart_pDevice[index]->phuart);
-          /*Çå³ş¿ÕÏĞÖĞ¶Ï±êÖ¾£¬·ñÔò»áÒ»Ö±²»¶Ï½øÈëÖĞ¶Ï*/
+          /*æ¸…æ¥šç©ºé—²ä¸­æ–­æ ‡å¿—ï¼Œå¦åˆ™ä¼šä¸€ç›´ä¸æ–­è¿›å…¥ä¸­æ–­*/
           __HAL_UART_CLEAR_IDLEFLAG(Uart_pDevice[index]->phuart);
-          /*¼ÆËã±¾´Î½ÓÊÕÊı¾İ³¤¶È*/
+          /*è®¡ç®—æœ¬æ¬¡æ¥æ”¶æ•°æ®é•¿åº¦*/
           uint32_t data_length  = Uart_pDevice[index]->MAX_RX_Temp - __HAL_DMA_GET_COUNTER(Uart_pDevice[index]->phdma_rx);
-          /*½«Êı¾İ¼ÇÂ¼ÖÁ»·ĞÎÇø*/
+          /*å°†æ•°æ®è®°å½•è‡³ç¯å½¢åŒº*/
           CQ_putData(Uart_pDevice[index]->cb ,Uart_pDevice[index]->RX_Buff_Temp ,(uint32_t)data_length);
 #if USE_LOOPBACK 	
           HAL_UART_Transmit(DEBUG_UART, (uint8_t *)Uart_pDevice[index]->RX_Buff_Temp,(uint16_t)data_length,0xFFFF);
 #endif
-          /*Çå¿ÕÁÙÊ±»º³åÇø*/
+          /*æ¸…ç©ºä¸´æ—¶ç¼“å†²åŒº*/
           memset(Uart_pDevice[index]->RX_Buff_Temp ,0 ,data_length);
           data_length = 0;
-          /*´ò¿ª¿ÕÏĞÖĞ¶Ï*/
+          /*æ‰“å¼€ç©ºé—²ä¸­æ–­*/
           __HAL_UART_ENABLE_IT(Uart_pDevice[index]->phuart ,UART_IT_IDLE);
-          /*ÖØÆô¿ªÊ¼DMA´«Êä*/
+          /*é‡å¯å¼€å§‹DMAä¼ è¾“*/
           HAL_UART_Receive_DMA(Uart_pDevice[index]->phuart ,Uart_pDevice[index]->RX_Buff_Temp ,Uart_pDevice[index]->MAX_RX_Temp);
         }
     }
 }  
 
 /************************************************************
-  * @brief   ´®¿Ú²Ù×÷¾ä±ú»ñÈ¡
-  * @param   [in]uart_opt_handle ´®¿Ú¾ä±ú.
-  * @param   [in]data Êı¾İ.
-  * @param   [in]size Êı¾İ´óĞ¡.
-  * @return  true ·¢ËÍ³É¹¦.
+  * @brief   ä¸²å£æ“ä½œå¥æŸ„è·å–
+  * @param   [in]uart_opt_handle ä¸²å£å¥æŸ„.
+  * @param   [in]data æ•°æ®.
+  * @param   [in]size æ•°æ®å¤§å°.
+  * @return  true å‘é€æˆåŠŸ.
   * @author  aron566
   * @date    2020/3/15
   * @version v1.0
@@ -220,9 +220,9 @@ bool Uart_Port_Transmit_Data(Uart_Dev_Handle_t *uart_opt_handle, uint8_t *data, 
 }  
 
 /************************************************************
-  * @brief   ´®¿Ú²Ù×÷¾ä±ú»ñÈ¡
-  * @param   [in]uart_num ´®¿ÚºÅ.
-  * @return  ´®¿Ú¾ä±ú.
+  * @brief   ä¸²å£æ“ä½œå¥æŸ„è·å–
+  * @param   [in]uart_num ä¸²å£å·.
+  * @return  ä¸²å£å¥æŸ„.
   * @author  aron566
   * @date    2020/3/15
   * @version v1.0
@@ -238,7 +238,7 @@ Uart_Dev_Handle_t *Uart_Port_Get_Handle(Uart_num_t uart_num)
 }
 
 /************************************************************
-  * @brief   ´®¿Ú²Ù×÷³õÊ¼»¯
+  * @brief   ä¸²å£æ“ä½œåˆå§‹åŒ–
   * @param   [in]None.
   * @return  None.
   * @author  aron566
@@ -262,19 +262,19 @@ void Uart_Port_Init(void)
     }
 }
 
-#pragma import(__use_no_semihosting) // È·±£Ã»ÓĞ´Ó C ¿âÁ´½ÓÊ¹ÓÃ°ëÖ÷»úµÄº¯Êı
-struct __FILE // ±ê×¼¿âĞèÒªµÄÖ§³Öº¯Êı
+#pragma import(__use_no_semihosting) // ç¡®ä¿æ²¡æœ‰ä» C åº“é“¾æ¥ä½¿ç”¨åŠä¸»æœºçš„å‡½æ•°
+struct __FILE // æ ‡å‡†åº“éœ€è¦çš„æ”¯æŒå‡½æ•°
 {
 	int handle;
 };
-/* FILE is typedef ¡¯ d in stdio.h. */
+/* FILE is typedef â€™ d in stdio.h. */
 FILE __stdout;
 void _ttywrch(int ch)
 {
     ch=ch;
 }
 
-void _sys_exit(int x) //¶¨Òå _sys_exit() ÒÔ±ÜÃâÊ¹ÓÃ°ëÖ÷»úÄ£Ê½
+void _sys_exit(int x) //å®šä¹‰ _sys_exit() ä»¥é¿å…ä½¿ç”¨åŠä¸»æœºæ¨¡å¼
 {
     (void)x;
 }
@@ -282,10 +282,10 @@ void _sys_exit(int x) //¶¨Òå _sys_exit() ÒÔ±ÜÃâÊ¹ÓÃ°ëÖ÷»úÄ£Ê½
 #if (USE_NEW_REDIRECT == 0)
 #include "stdio.h"
 /************************************************************
-  * @brief   ÖØ¶¨Ïòc¿âº¯Êıprintfµ½HAL_UART_Transmit
-  * @param   [in]ch Êä³ö×Ö·û.
-  * @param   [in]f ÎÄ¼şÖ¸Õë
-  * @return  ×Ö·û
+  * @brief   é‡å®šå‘cåº“å‡½æ•°printfåˆ°HAL_UART_Transmit
+  * @param   [in]ch è¾“å‡ºå­—ç¬¦.
+  * @param   [in]f æ–‡ä»¶æŒ‡é’ˆ
+  * @return  å­—ç¬¦
   * @author  aron566
   * @date    2020/3/15
   * @version v1.0
@@ -298,9 +298,9 @@ int fputc(int ch, FILE *f)
 }
 
 /************************************************************
-  * @brief   ÖØ¶¨Ïòc¿âº¯Êıgetchar,scanf
-  * @param   [in]f ÎÄ¼şÖ¸Õë
-  * @return  ×Ö·û
+  * @brief   é‡å®šå‘cåº“å‡½æ•°getchar,scanf
+  * @param   [in]f æ–‡ä»¶æŒ‡é’ˆ
+  * @return  å­—ç¬¦
   * @author  aron566
   * @date    2020/3/15
   * @version v1.0
@@ -314,7 +314,7 @@ int fgetc(FILE *f)
 }
 
 #else
-/*ĞÂÊ½ÖØ¶¨Ïò*/
+/*æ–°å¼é‡å®šå‘*/
 #include "stdio.h"
 int __io_putchar(int ch)
 {

@@ -34,9 +34,9 @@ extern "C" {
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 
-/*DFSDM³õÊ¼»¯*/
+/*DFSDMåˆå§‹åŒ–*/
 void DFSDM_Port_Init(void);
-/*DFSDMÆô¶¯PDM×ª»»*/
+/*DFSDMå¯åŠ¨PDMè½¬æ¢*/
 void DFSDM_Port_Start(void);
 
 #ifdef __cplusplus ///<end extern c

@@ -5,11 +5,11 @@
  *
  *  @author aron566
  *
- *  @copyright °®ÚĞ¿Æ¼¼ÑĞ¾¿Ôº.
+ *  @copyright çˆ±è°›ç§‘æŠ€ç ”ç©¶é™¢.
  *
- *  @brief Ö÷ÏßÈÎÎñ
+ *  @brief ä¸»çº¿ä»»åŠ¡
  *
- *  @details 1¡¢
+ *  @details 1ã€
  *
  *  @version V1.0
  */
@@ -24,17 +24,17 @@ extern "C" {
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
-/*ÅĞ¶ÏÒôÆµÊı¾İÊÇ·ñĞ¡ÓÚ×îĞ¡¼ì²âÊı¾İÁ¿*/
+/*åˆ¤æ–­éŸ³é¢‘æ•°æ®æ˜¯å¦å°äºæœ€å°æ£€æµ‹æ•°æ®é‡*/
 #define AUDIO_DATA_SIZE_MIN   STEREO_FRAME_SIZE//MONO_FRAME_SIZE
 #define AUDIO_DATA_SIZE_IS_LESS_AUDIO_DATA_MIN(size)  ((size < AUDIO_DATA_SIZE_MIN)? \
                                                       1:0)
-/*½«ÕûĞÎÊı¾İÊı×é¸´ÖÆµ½¸¡µãĞÍÊı×éÖĞ*/
+/*å°†æ•´å½¢æ•°æ®æ•°ç»„å¤åˆ¶åˆ°æµ®ç‚¹å‹æ•°ç»„ä¸­*/
 #define INT16_ARRAY2FLOAT32(float_buf, i16_buf, size) do{ \
                                                           for(uint16_t index = 0; index < size; index++) \
                                                           { \
                                                             float_buf[index] = (float)i16_buf[index]; \
                                                           }}while(0)
-/*½«Êı¾İ¸´ÖÆ³ÉË«·İµ½Êı×éÖĞ*/
+/*å°†æ•°æ®å¤åˆ¶æˆåŒä»½åˆ°æ•°ç»„ä¸­*/
 #define INT16_ARRAY_CROSS_JOIN(cross_buf, source_buf, cross_size) \
                                                       do{ \
                                                           uint16_t cnt = 0; \
@@ -46,17 +46,9 @@ extern "C" {
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 /** Private variables --------------------------------------------------------*/
-static int16_t audiodatainputbuf[STEREO_FRAME_SIZE] = {0};
-static int16_t audiodataoutputbuf[STEREO_FRAME_SIZE] = {0};
-static int16_t OneChannel_Data[MONO_FRAME_SIZE] = {0};
-/*Ëã·¨ÔËËãÔ´Êı¾İ»º³åÇø*/
-static float Algorithm_Source_Data[MONO_FRAME_SIZE] = {0};
-
-static int16_t Algorithm_Result_Data[MONO_FRAME_SIZE] = {0};
 
 /** Private function prototypes ----------------------------------------------*/
-static void Algorithm_Process_Start(void);/**< Ëã·¨ÈÎÎñ´¦ÀíÆô¶¯*/
-static void Algorithm_Function_Select(int16_t *source_data);
+
 /** Private user code --------------------------------------------------------*/
 
 /** Private application code -------------------------------------------------*/
@@ -66,148 +58,6 @@ static void Algorithm_Function_Select(int16_t *source_data);
 *
 ********************************************************************************
 */
-
-/**
-  ******************************************************************
-  * @brief   Ëã·¨¹¦ÄÜÑ¡Ôñ
-  * @param   [in]source_data Ô­Ê¼²É¼¯Êı¾İ
-  * @return  None.
-  * @author  aron566
-  * @version V1.0
-  * @date    2020-01-11
-  ******************************************************************
-  */
-static void Algorithm_Function_Select(int16_t *source_data)
-{
-//  switch(g_Algorithm_Func_Select)
-//  {
-//    case RNN_NOISE_FUNC:
-//      Algorithm_RNN(source_data, Algorithm_Result_Data);
-//      break;
-//    case MASK_EMD_FUNC:
-//      Algorithm_MASK_EMD(Algorithm_Source_Data, Algorithm_Result_Data);
-//      break;
-//    case MASK_EMD_WDRC_FUNC:
-//      Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
-//      break;
-//    case VOL_FUNC:
-//      Algorithm_VOL(source_data, Algorithm_Result_Data);
-//      break;
-//    case AGC_FUNC:
-//      Algorithm_AGC(source_data, Algorithm_Result_Data);
-//      break;
-//    case FUNCTON_MAX:
-//      {
-//        Algorithm_RNN(source_data, Algorithm_Result_Data);
-//        
-//        INT16_ARRAY2FLOAT32(Algorithm_Source_Data, Algorithm_Result_Data, MONO_FRAME_SIZE);
-//        
-//        Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
-//        Algorithm_VOL(Algorithm_Result_Data, Algorithm_Result_Data);
-//        Algorithm_AGC(Algorithm_Result_Data, Algorithm_Result_Data);
-//      }
-//      break;
-//    default:
-//      break;
-//  }
-//  
-//  INT16_ARRAY_CROSS_JOIN(audiodataoutputbuf, Algorithm_Result_Data, STEREO_FRAME_SIZE);
-
-//  Sai_Port_Send_Data((uint8_t *)audiodataoutputbuf, STEREO_FRAME_SIZE);
-  
-  /*¸üĞÂUSBÒôÆµÊı¾İ*/
-//  for(int i = 0; i < MONO_FRAME_SIZE; i++)
-//  {
-//    g_UACRingBuf[g_UACWriteIndex] = source_data[i];
-//    g_UACWriteIndex++;
-//    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
-//    {
-//      g_UACWriteIndex = 0;
-//    }
-//    
-//    g_UACRingBuf[g_UACWriteIndex] = Algorithm_Result_Data[i];
-//    g_UACWriteIndex++;
-
-//    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
-//    {
-//      g_UACWriteIndex = 0;
-//    }
-//  }
-}
-
-static void Algorithm_Old_Process_Start(void)
-{
-//  extern volatile uint8_t SAI_Transmit_Complete_Flag;
-//  extern volatile uint8_t SAI_Receive_Complete_Flag;
-//  extern volatile uint8_t SAI_Can_Send_Data_Flag;
-//  extern volatile uint16_t SAI_RX_Buf_0[STEREO_FRAME_SIZE];
-//  extern volatile uint16_t SAI_RX_Buf_1[STEREO_FRAME_SIZE];
-//  if(SAI_Can_Send_Data_Flag == 1)
-//  {
-//    SAI_Can_Send_Data_Flag = 0;
-//    
-//    /*¿½±´RXx*/
-//    if(SAI_Receive_Complete_Flag == 0)
-//    {
-//      memcpy((void *)audiodatainputbuf, (void *)SAI_RX_Buf_0, sizeof(int16_t)*STEREO_FRAME_SIZE);
-//    }
-//    if(SAI_Receive_Complete_Flag == 1)
-//    {
-//      memcpy((void *)audiodatainputbuf, (void *)SAI_RX_Buf_1, sizeof(int16_t)*STEREO_FRAME_SIZE);
-//    }
-//    
-//    /*·ÖÀëÍ¨µÀÊı¾İ£ºL-R-L-R-L-R......*/
-//    for(int i = 0; i < MONO_FRAME_SIZE; i++)
-//    {
-//      OneChannel_Data[i] = audiodatainputbuf[i*2];
-//      Algorithm_Source_Data[i] = (float)audiodatainputbuf[i*2];
-//  //    temp_data_right[i] = temp_buf[i*2+1];
-//    }    
- 
-//    switch(g_Algorithm_Func_Select)
-//    {
-//      case RNN_NOISE_FUNC:
-//        Algorithm_RNN(OneChannel_Data, Algorithm_Result_Data);
-//        break;
-//      case MASK_EMD_FUNC:
-//        Algorithm_MASK_EMD(Algorithm_Source_Data, Algorithm_Result_Data);
-//        break;
-//      case MASK_EMD_WDRC_FUNC:
-//        Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
-//        break;
-//      case VOL_FUNC:
-//        Algorithm_VOL(OneChannel_Data, Algorithm_Result_Data);
-//        break;
-//      case AGC_FUNC:
-//        Algorithm_AGC(OneChannel_Data, Algorithm_Result_Data);
-//        break;
-//      case FUNCTON_MAX:
-//        {
-//          Algorithm_RNN(OneChannel_Data, Algorithm_Result_Data);
-//          
-//          INT16_ARRAY2FLOAT32(Algorithm_Source_Data, Algorithm_Result_Data, MONO_FRAME_SIZE);
-//          
-//          Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
-//          Algorithm_VOL(Algorithm_Result_Data, Algorithm_Result_Data);
-//          Algorithm_AGC(Algorithm_Result_Data, Algorithm_Result_Data);
-//        }
-//        break;
-//      default:
-//        break;
-//    }
-
-//    INT16_ARRAY_CROSS_JOIN(audiodataoutputbuf, Algorithm_Result_Data, STEREO_FRAME_SIZE);
-
-//    if(SAI_Transmit_Complete_Flag == 0)
-//    {
-//      memcpy((void *)SAI_TX_Buf_0, (void *)audiodataoutputbuf, sizeof(int16_t)*STEREO_FRAME_SIZE);
-//    }
-//    else if(SAI_Transmit_Complete_Flag == 1)
-//    {
-//      memcpy((void *)SAI_TX_Buf_1, (void *)audiodataoutputbuf, sizeof(int16_t)*STEREO_FRAME_SIZE);
-//    }	
-//  }
-}
 
 /** Public application code --------------------------------------------------*/
 /*******************************************************************************
@@ -219,7 +69,7 @@ static void Algorithm_Old_Process_Start(void)
 
 /**
   ******************************************************************
-  * @brief   ²¥·ÅÒôÆµÈÎÎñ´¦Àí
+  * @brief   æ’­æ”¾éŸ³é¢‘ä»»åŠ¡å¤„ç†
   * @param   [in]None
   * @return  None.
   * @author  aron566
@@ -234,7 +84,7 @@ void User_Main_PlayTask_Process_Loop(void)
 
 /**
   ******************************************************************
-  * @brief   ÈÎÎñ´¦Àí
+  * @brief   ä»»åŠ¡å¤„ç†
   * @param   [in]None
   * @return  None.
   * @author  aron566
@@ -246,9 +96,6 @@ void User_Main_Task_Process_Loop(void)
 {
   for(;;)
   {
-//    Algorithm_Old_Process_Start();
-    
-//    User_Main_PlayTask_Process_Loop();
 //    DFSDM_Port_Start();
     
     Sai_Port_Start();
@@ -258,7 +105,7 @@ void User_Main_Task_Process_Loop(void)
 
 /**
   ******************************************************************
-  * @brief   ³õÊ¼»¯¸÷Ä£¿é¹¦ÄÜ
+  * @brief   åˆå§‹åŒ–å„æ¨¡å—åŠŸèƒ½
   * @param   [in]None
   * @return  None.
   * @author  aron566
@@ -268,29 +115,32 @@ void User_Main_Task_Process_Loop(void)
   */
 void User_Main_Task_Init(void)
 {
-  /*´®¿Ú²Ù×÷³õÊ¼»¯*/
+  /*ä¸²å£æ“ä½œåˆå§‹åŒ–*/
   Uart_Port_Init();
 
-  /*¶¨Ê±Æ÷³õÊ¼»¯*/
+  /*å®šæ—¶å™¨åˆå§‹åŒ–*/
   Timer_Port_Init();
   
-  /*Sai²Ù×÷³õÊ¼»¯*/
+  /*Saiæ“ä½œåˆå§‹åŒ–*/
   Sai_Port_Init();
   
-  /*DFSDM³õÊ¼»¯*/
+  /*DFSDMåˆå§‹åŒ–*/
   DFSDM_Port_Init();
   
-  /*USB³õÊ¼»¯*/
+  /*USBåˆå§‹åŒ–*/
   UAC_Init();
   
-  /*I2S³õÊ¼»¯*/
+  /*I2Såˆå§‹åŒ–*/
   I2S_Port_Init();
+  
+  /*DACåˆå§‹åŒ–*/
+  //DAC_Port_Init();
   /*other initialization task code*/
 }
 
 /**
   ******************************************************************
-  * @brief   ÖĞ¶ÏÏòÁ¿±í¿½±´µ½D¼ÓËÙÇø
+  * @brief   ä¸­æ–­å‘é‡è¡¨æ‹·è´åˆ°DåŠ é€ŸåŒº
   * @param   [in]None
   * @return  None.
   * @author  aron566
@@ -303,7 +153,7 @@ void User_InterruptVectorTable_Move(void)
   uint32_t *SouceAddr = (uint32_t *)FLASH_BANK1_BASE;
   uint32_t *DestAddr = (uint32_t *)D1_DTCMRAM_BASE;
   memcpy(DestAddr, SouceAddr, 0x400);
-  /* ÉèÖÃÖĞ¶ÏÏòÁ¿±íµ½ DTCM ÀïÃæ*/
+  /* è®¾ç½®ä¸­æ–­å‘é‡è¡¨åˆ° DTCM é‡Œé¢*/
   SCB->VTOR = D1_DTCMRAM_BASE;
 }
 

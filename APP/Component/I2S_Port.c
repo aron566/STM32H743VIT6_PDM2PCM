@@ -9,7 +9,7 @@
  *
  *  @brief 
  *
- *  @details 1°¢
+ *  @details 1„ÄÅ
  *
  *  @version V1.0
  */
@@ -24,21 +24,21 @@ extern "C" {
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
-#define ENABLE_I2S_PERIPHERAL   0/**< —°‘Ò «∑Ò∆Ù”√I2Sƒ£øÈ*/
+#define ENABLE_I2S_PERIPHERAL   0/**< ÈÄâÊã©ÊòØÂê¶ÂêØÁî®I2SÊ®°Âùó*/
 
-/*÷ÿ÷√Ω” ’ª∫≥Â¥Û–°*/
+/*ÈáçÁΩÆÊé•Êî∂ÁºìÂÜ≤Â§ßÂ∞è*/
 #if ENABLE_I2S_PERIPHERAL
   #ifdef PCM_ONE_SAMPLE_NUM
     #undef PCM_ONE_SAMPLE_NUM
-    #define PCM_ONE_SAMPLE_NUM    MONO_FRAME_SIZE/**< µ•¥ŒPCM◊™ªª÷°¥Û–°*/
+    #define PCM_ONE_SAMPLE_NUM    MONO_FRAME_SIZE/**< ÂçïÊ¨°PCMËΩ¨Êç¢Â∏ßÂ§ßÂ∞è*/
     #undef PCM_TWO_SAMPLE_NUM
-    #define PCM_TWO_SAMPLE_NUM    (PCM_ONE_SAMPLE_NUM*2)/**< ¡Ω¥ŒPCM◊™ªª÷°¥Û–°*/
+    #define PCM_TWO_SAMPLE_NUM    (PCM_ONE_SAMPLE_NUM*2)/**< ‰∏§Ê¨°PCMËΩ¨Êç¢Â∏ßÂ§ßÂ∞è*/
   #endif
   #ifdef PDM_ONE_SAMPLE_NUM
   #undef PDM_ONE_SAMPLE_NUM
-  #define PDM_ONE_SAMPLE_NUM      (PCM_ONE_SAMPLE_NUM*4)/**< µ•¥ŒPDM≤…—˘÷°¥Û–°*/
+  #define PDM_ONE_SAMPLE_NUM      (PCM_ONE_SAMPLE_NUM*4)/**< ÂçïÊ¨°PDMÈááÊ†∑Â∏ßÂ§ßÂ∞è*/
   #undef PDM_TWO_SAMPLE_NUM
-  #define PDM_TWO_SAMPLE_NUM      (PDM_ONE_SAMPLE_NUM*2)/**< ¡Ω¥ŒPDM≤…—˘÷°¥Û–°*/
+  #define PDM_TWO_SAMPLE_NUM      (PDM_ONE_SAMPLE_NUM*2)/**< ‰∏§Ê¨°PDMÈááÊ†∑Â∏ßÂ§ßÂ∞è*/
   #endif
 #endif
 /** Private constants --------------------------------------------------------*/
@@ -52,10 +52,11 @@ extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 /** Private variables --------------------------------------------------------*/
-/*I2S ˝æ›Ω” ’±Í÷æ*/
+/*I2SÊï∞ÊçÆÊé•Êî∂Ê†áÂøó*/
+#if ENABLE_I2S_PERIPHERAL
 static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
+#endif
 static volatile uint32_t I2S_DmaCanRead_Flag  = 0;
-
 /** Private function prototypes ----------------------------------------------*/
 
 /** Private user code --------------------------------------------------------*/
@@ -78,8 +79,8 @@ static volatile uint32_t I2S_DmaCanRead_Flag  = 0;
 #if ENABLE_I2S_PERIPHERAL
 /**
   ******************************************************************
-  * @brief   I2S∞Î∑¢ÀÕÕÍ≥…÷–∂œ
-  * @param   [in]hi2s æ‰±˙
+  * @brief   I2SÂçäÂèëÈÄÅÂÆåÊàê‰∏≠Êñ≠
+  * @param   [in]hi2s Âè•ÊüÑ
   * @return  None.
   * @author  aron566
   * @version V1.0
@@ -93,8 +94,8 @@ void HAL_I2S_TxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 
 /**
   ******************************************************************
-  * @brief   I2S∑¢ÀÕÕÍ≥…÷–∂œ
-  * @param   [in]hi2s æ‰±˙
+  * @brief   I2SÂèëÈÄÅÂÆåÊàê‰∏≠Êñ≠
+  * @param   [in]hi2s Âè•ÊüÑ
   * @return  None.
   * @author  aron566
   * @version V1.0
@@ -108,8 +109,8 @@ void HAL_I2S_TxCpltCallback(I2S_HandleTypeDef *hi2s)
 
 /**
   ******************************************************************
-  * @brief   I2S∞ÎΩ” ’ÕÍ≥…÷–∂œ
-  * @param   [in]hi2s æ‰±˙
+  * @brief   I2SÂçäÊé•Êî∂ÂÆåÊàê‰∏≠Êñ≠
+  * @param   [in]hi2s Âè•ÊüÑ
   * @return  None.
   * @author  aron566
   * @version V1.0
@@ -123,8 +124,8 @@ void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 
 /**
   ******************************************************************
-  * @brief   I2SΩ” ’ÕÍ≥…÷–∂œ
-  * @param   [in]hi2s æ‰±˙
+  * @brief   I2SÊé•Êî∂ÂÆåÊàê‰∏≠Êñ≠
+  * @param   [in]hi2s Âè•ÊüÑ
   * @return  None.
   * @author  aron566
   * @version V1.0
@@ -138,7 +139,7 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s)
 #endif
 /**
   ******************************************************************
-  * @brief   I2SΩ”ø⁄∆Ù∂Ø
+  * @brief   I2SÊé•Âè£ÂêØÂä®
   * @param   [in]None
   * @return  None
   * @author  aron566
@@ -160,7 +161,7 @@ void I2S_Port_Start(void)
 
 /**
   ******************************************************************
-  * @brief   I2SΩ”ø⁄≥ı ºªØ
+  * @brief   I2SÊé•Âè£ÂàùÂßãÂåñ
   * @param   [in]None
   * @return  None
   * @author  aron566

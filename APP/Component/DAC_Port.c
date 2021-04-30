@@ -1,15 +1,15 @@
 /**
  *  @file DAC_Port.c
  *
- *  @date 2021-01-15
+ *  @date 2021-03-11
  *
  *  @author aron566
  *
- *  @copyright None.
+ *  @copyright çˆ±è°›ç§‘æŠ€ç ”ç©¶é™¢.
  *
- *  @brief DAC²Ù×÷½Ó¿Ú
+ *  @brief DACæ“ä½œæ¥å£
  *
- *  @details 1¡¢
+ *  @details 1ã€
  *
  *  @version V1.0
  */
@@ -19,20 +19,20 @@ extern "C" {
 /** Includes -----------------------------------------------------------------*/
 /* Private includes ----------------------------------------------------------*/
 #include "DAC_Port.h"
-#include "dac.h"
 #include "main.h"
+#include "CS43L12_Driver.h"
+#include "SAI_port.h"
 /** Private typedef ----------------------------------------------------------*/
 
 /** Private macros -----------------------------------------------------------*/
-#define DAC_IN_VAL_MAX      4095U/**< ×î´ó¾«¶È12Î»*/
-#define DAC_VOL_MAX         3.3
+
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
-extern DAC_HandleTypeDef hdac1;
+
 /** Private variables --------------------------------------------------------*/
-static float u16TOu12_Factor = 0.0078;
+
 /** Private function prototypes ----------------------------------------------*/
-static inline int16_t int16CovU12(int16_t data);
+
 /** Private user code --------------------------------------------------------*/
 
 /** Private application code -------------------------------------------------*/
@@ -42,21 +42,7 @@ static inline int16_t int16CovU12(int16_t data);
 *
 ********************************************************************************
 */
-/**
-  ******************************************************************
-  * @brief   INT16×ªÎªU12 DACÊıÖµ
-  * @param   [in]data
-  * @return  None.
-  * @author  aron566
-  * @version V1.0
-  * @date    2021-01-15
-  ******************************************************************
-  */
-static inline int16_t int16CovU12(int16_t data)
-{
-  float temp = u16TOu12_Factor*data;
-  return (data <= 0)?0:(int16_t)temp;
-}
+
 /** Public application code --------------------------------------------------*/
 /*******************************************************************************
 *
@@ -67,55 +53,21 @@ static inline int16_t int16CovU12(int16_t data)
 
 /**
   ******************************************************************
-  * @brief   DAC³õÊ¼»¯
+  * @brief   DACåˆå§‹åŒ–
   * @param   [in]None
   * @return  None.
   * @author  aron566
   * @version V1.0
-  * @date    2020-01-15
+  * @date    2021-03-11
   ******************************************************************
   */
 void DAC_Port_Init(void)
 {
-  u16TOu12_Factor = (float)DAC_IN_VAL_MAX/SHRT_MAX;
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
-  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
-}
-
-/**
-  ******************************************************************
-  * @brief   DACÉèÖÃÊä³öãĞÖµ¸üĞÂÏµÊı
-  * @param   [in]limit_val ãĞÖµ
-  * @return  ĞÂDACÏµÊı.
-  * @author  aron566
-  * @version V1.0
-  * @date    2020-01-15
-  ******************************************************************
-  */
-float DAC_Port_Set_OutMax(int16_t limit_val)
-{
-  return u16TOu12_Factor = (float)DAC_IN_VAL_MAX/limit_val;
-}
-
-/**
-  ******************************************************************
-  * @brief   DACÊä³ö
-  * @param   [in]pData Ğè×ª»»µÄÊı¾İ
-  * @param   [in]Length Êı¾İÊıÄ¿->¸ù¾İDMAÅäÖÃµÄ´«Êäµ¥Î»
-  * @return  None.
-  * @author  aron566
-  * @version V1.0
-  * @date    2020-01-15
-  ******************************************************************
-  */
-void DAC_Port_Set_Vol(int16_t *pData, uint32_t Length)
-{
-  /*×ª»»Êı¾İ*/
-  for(uint32_t i = 0; i < Length; i++)
-  {
-    pData[i] = int16CovU12(pData[i]);
-  }
-  HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t *)pData, Length, DAC_ALIGN_12B_R);
+  /*åˆå§‹åŒ–CS43L12è®¾å¤‡*/
+  CS43L12_Driver_Init();
+  
+  /*SAIå‘é€å¯åŠ¨*/
+  Sai_Port_Init();
 }
 
 #ifdef __cplusplus ///<end extern c

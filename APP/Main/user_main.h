@@ -5,7 +5,7 @@
  *
  *  @author aron566
  *
- *  @brief 主线任务
+ *  @brief 涓荤嚎浠诲姟
  *  
  *  @version V1.0
  */
@@ -30,6 +30,7 @@ extern "C" {
 #include "I2S_Port.h"
 #include "Timer_Port.h"
 #include "DFSDM_Port.h"
+#include "DAC_Port.h"
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/
@@ -40,16 +41,14 @@ extern "C" {
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 
-/*中断向量表拷贝到D加速区*/
+/*涓柇鍚戦噺琛ㄦ嫹璐濆埌D鍔犻�熷尯*/
 void User_InterruptVectorTable_Move(void);
-/*初始化各模块功能*/
+/*鍒濆鍖栧悇妯″潡鍔熻兘*/
 void User_Main_Task_Init(void);
-/*任务处理循环*/
+/*浠诲姟澶勭悊寰幆*/
 void User_Main_Task_Process_Loop(void);
-/*播放音频任务处理*/
+/*鎾斁闊抽浠诲姟澶勭悊*/
 void User_Main_PlayTask_Process_Loop(void);
-/*存储来自音频设备数据*/
-void User_Audio_Channel_Data_Save(uint16_t *data, uint32_t len);
 
 #ifdef __cplusplus ///<end extern c
 }
