@@ -134,7 +134,7 @@ void User_Main_Task_Init(void)
   I2S_Port_Init();
   
   /*DAC初始化*/
-  //DAC_Port_Init();
+  DAC_Port_Init();
   /*other initialization task code*/
 }
 

@@ -379,14 +379,14 @@ void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai)
   SAI_DmaCanRead_Flag = 1;
   if(hsai == &hsai_BlockA2)
   {
-    PCM_Data_Ptr[0] = (int16_t*)&PCM_ChannelBuf[0][0];
+    PCM_Data_Ptr[0] = (int32_t*)&PCM_ChannelBuf[0][0];
   }
   if(hsai == &hsai_BlockB1)
   {
-    PCM_Data_Ptr[1] = (int16_t*)&PCM_ChannelBuf[1][0];
+    PCM_Data_Ptr[1] = (int32_t*)&PCM_ChannelBuf[1][0];
   }
-  PCM_Data_Ptr[2] = (int16_t*)PCM_ChannelBuf[2];
-  PCM_Data_Ptr[3] = (int16_t*)PCM_ChannelBuf[3];
+  PCM_Data_Ptr[2] = (int32_t*)PCM_ChannelBuf[2];
+  PCM_Data_Ptr[3] = (int32_t*)PCM_ChannelBuf[3];
 }
 
 /**
