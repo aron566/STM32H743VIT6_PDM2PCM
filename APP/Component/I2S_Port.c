@@ -53,10 +53,9 @@ extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 /** Private variables --------------------------------------------------------*/
 /*I2S数据接收标志*/
-#if ENABLE_I2S_PERIPHERAL
 static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
-#endif
 static volatile uint32_t I2S_DmaCanRead_Flag  = 0;
+
 /** Private function prototypes ----------------------------------------------*/
 
 /** Private user code --------------------------------------------------------*/

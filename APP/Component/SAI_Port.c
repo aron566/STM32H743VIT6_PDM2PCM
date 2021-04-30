@@ -62,17 +62,19 @@ extern volatile int16_t g_UACRingBuf[UAC_BUFFER_SIZE];
 extern volatile uint16_t g_UACWriteIndex;
 extern volatile uint16_t g_UACReadIndex;
 
+/*音频转换数据接收缓冲区*/
+//__attribute__ ((at(0x38000000))) volatile PDM2PCM_BUF_Typedef_t Pdm2Pcm_ChannelBuf[MIC_CHANNEL_NUM] = {0};
 /*音频PCM数据接收缓冲区*/
-__attribute__ ((at(0x38000000))) volatile int32_t PCM_ChannelBuf[MIC_CHANNEL_NUM][PCM_TWO_SAMPLE_NUM] = {0};
-__attribute__ ((at(0x38000000+sizeof(PCM_ChannelBuf)))) volatile int32_t DAC_Audio_Buf[PCM_TWO_SAMPLE_NUM] = {0};
+__attribute__ ((at(0x38000000))) volatile int16_t PCM_ChannelBuf[MIC_CHANNEL_NUM][PCM_TWO_SAMPLE_NUM] = {0};
+
 /** Private variables --------------------------------------------------------*/
-static int32_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
+static int16_t *PCM_Data_Ptr[MIC_CHANNEL_NUM]   = {NULL};
 static volatile uint32_t SAI_DmaCanRead_Flag  = 0;
-static int32_t *DAC_Audio_Data_Ptr = (int32_t *)DAC_Audio_Buf;
-static int32_t MIC1_2_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
-static int32_t MIC3_4_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
-static int32_t MIC5_6_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
-static int32_t MIC7_8_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+
+static int16_t MIC1_2_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+static int16_t MIC3_4_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+static int16_t MIC5_6_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
+static int16_t MIC7_8_STEREO_Aidio_TempBuf[PCM_ONE_SAMPLE_NUM] = {0};
 /** Private function prototypes ----------------------------------------------*/
 /*中断回调*/
 static void HAL_SAI_TxBuf0CpltCallback(DMA_HandleTypeDef *hdma);
@@ -377,14 +379,8 @@ HAL_StatusTypeDef HAL_SAI_MultiMemReceive_DMA(SAI_HandleTypeDef *hsai, uint8_t *
 void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai)
 {
   SAI_DmaCanRead_Flag = 1;
-  if(hsai == &hsai_BlockA2)
-  {
-    PCM_Data_Ptr[0] = (int16_t*)&PCM_ChannelBuf[0][0];
-  }
-  if(hsai == &hsai_BlockB1)
-  {
-    PCM_Data_Ptr[1] = (int16_t*)&PCM_ChannelBuf[1][0];
-  }
+  PCM_Data_Ptr[0] = (int16_t*)PCM_ChannelBuf[0];
+  PCM_Data_Ptr[1] = (int16_t*)PCM_ChannelBuf[1];
   PCM_Data_Ptr[2] = (int16_t*)PCM_ChannelBuf[2];
   PCM_Data_Ptr[3] = (int16_t*)PCM_ChannelBuf[3];
 }
@@ -402,48 +398,10 @@ void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai)
 void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef *hsai)
 {
   SAI_DmaCanRead_Flag = 1;
-  if(hsai == &hsai_BlockA2)
-  {
-    PCM_Data_Ptr[0] = (int32_t*)&PCM_ChannelBuf[0][PCM_ONE_SAMPLE_NUM];
-  }
-  if(hsai == &hsai_BlockB1)
-  {
-    PCM_Data_Ptr[1] = (int32_t*)&PCM_ChannelBuf[1][PCM_ONE_SAMPLE_NUM];
-  }
-  PCM_Data_Ptr[2] = (int32_t*)&PCM_ChannelBuf[2][PCM_ONE_SAMPLE_NUM];
-  PCM_Data_Ptr[3] = (int32_t*)&PCM_ChannelBuf[3][PCM_ONE_SAMPLE_NUM];
-}
-
-/**
-  ******************************************************************
-  * @brief   强定义SAI发送完成中断
-  * @param   [in]hsai sai句柄
-  * @return  None.
-  * @author  aron566
-  * @version V1.0
-  * @date    2021-01-19
-  ******************************************************************
-  */
-void HAL_SAI_TxHalfCpltCallback(SAI_HandleTypeDef *hsai)
-{
-  UNUSED(hsai);
-  DAC_Audio_Data_Ptr = (int32_t *)&DAC_Audio_Buf[0];
-}
-
-/**
-  ******************************************************************
-  * @brief   强定义SAI发送完成中断
-  * @param   [in]hsai sai句柄
-  * @return  None.
-  * @author  aron566
-  * @version V1.0
-  * @date    2021-01-19
-  ******************************************************************
-  */
-void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef *hsai)
-{
-  UNUSED(hsai);
-  DAC_Audio_Data_Ptr = (int32_t *)&DAC_Audio_Buf[PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[0] = (int16_t*)&PCM_ChannelBuf[0][PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[1] = (int16_t*)&PCM_ChannelBuf[1][PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[2] = (int16_t*)&PCM_ChannelBuf[2][PCM_ONE_SAMPLE_NUM];
+  PCM_Data_Ptr[3] = (int16_t*)&PCM_ChannelBuf[3][PCM_ONE_SAMPLE_NUM];
 }
 
 /**
@@ -480,26 +438,30 @@ void Sai_Port_Start(void)
     return; 
   }
 
-  memmove(MIC1_2_STEREO_Aidio_TempBuf, PCM_Data_Ptr[0], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
-  memmove(MIC3_4_STEREO_Aidio_TempBuf, PCM_Data_Ptr[1], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
-  memmove(MIC5_6_STEREO_Aidio_TempBuf, PCM_Data_Ptr[2], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
-  memmove(MIC7_8_STEREO_Aidio_TempBuf, PCM_Data_Ptr[3], sizeof(int32_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC1_2_STEREO_Aidio_TempBuf, PCM_Data_Ptr[0], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC3_4_STEREO_Aidio_TempBuf, PCM_Data_Ptr[1], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC5_6_STEREO_Aidio_TempBuf, PCM_Data_Ptr[2], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
+  memmove(MIC7_8_STEREO_Aidio_TempBuf, PCM_Data_Ptr[3], sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
   
+  /*分离通道数据：L-R-L-R-L-R......*/
+//  for(int i = 0; i < MONO_FRAME_SIZE; i++)
+//  {
+//    MIC7_Aidio_TempBuf[i] = STEREO_Aidio_TempBuf[i*2];
+//    MIC8_Aidio_TempBuf[i] = STEREO_Aidio_TempBuf[i*2+1];
+//  }
+
   /*发送*/
   /*更新USB音频数据*/
   for(int i = 0; i < MONO_FRAME_SIZE; i++)
   {
-    g_UACRingBuf[g_UACWriteIndex] = (int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2]>>8);//MIC1_2_STEREO_Aidio_TempBuf[i*2];//
+    g_UACRingBuf[g_UACWriteIndex] = MIC3_4_STEREO_Aidio_TempBuf[i*2];
     g_UACWriteIndex++;
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
-    
-    g_UACRingBuf[g_UACWriteIndex] = (int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2+1]>>8);//MIC1_2_STEREO_Aidio_TempBuf[i*2+1];//
+
+    g_UACRingBuf[g_UACWriteIndex] = MIC3_4_STEREO_Aidio_TempBuf[i*2+1];
     g_UACWriteIndex++;
+
     g_UACWriteIndex = (g_UACWriteIndex >= UAC_BUFFER_SIZE)?0:g_UACWriteIndex;
-    
-    /*TO DAC*/
-    DAC_Audio_Data_Ptr[i*2] = MIC1_2_STEREO_Aidio_TempBuf[i*2];//(int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2]>>8);
-    DAC_Audio_Data_Ptr[i*2+1] = MIC1_2_STEREO_Aidio_TempBuf[i*2+1];//(int16_t)(MIC1_2_STEREO_Aidio_TempBuf[i*2+1]>>8);
   }
   SAI_DmaCanRead_Flag = 0;
 }
@@ -517,10 +479,14 @@ void Sai_Port_Start(void)
 void Sai_Port_Init(void)
 {
 #if ENABLE_SAI_PERIPHERAL
+  /*启动SAI3 DMA 双缓冲接收,双声道大小*/
+  //HAL_SAI_MultiMemReceive_DMA(&hsai_BlockA1, (uint8_t*)Pdm2Pcm_ChannelBuf[0].PCM_Buf, (uint8_t *)((int16_t *)(Pdm2Pcm_ChannelBuf[0].PCM_Buf+PCM_ONE_SAMPLE_NUM)), sizeof(int16_t)*PCM_ONE_SAMPLE_NUM);
+
   /*启动SAI DMA数据接收*/
-  HAL_SAI_Receive_DMA(&hsai_BlockA2, (uint8_t*)PCM_ChannelBuf[0], PCM_TWO_SAMPLE_NUM);
+  HAL_SAI_Receive_DMA(&hsai_BlockA1, (uint8_t*)PCM_ChannelBuf[0], PCM_TWO_SAMPLE_NUM);
   HAL_SAI_Receive_DMA(&hsai_BlockB1, (uint8_t*)PCM_ChannelBuf[1], PCM_TWO_SAMPLE_NUM);
-  HAL_SAI_Transmit_DMA(&hsai_BlockA1, (uint8_t*)DAC_Audio_Buf, PCM_TWO_SAMPLE_NUM);
+//  HAL_SAI_Receive_DMA(&hsai_BlockA2, (uint8_t*)PCM_ChannelBuf[2], PCM_TWO_SAMPLE_NUM);
+  HAL_SAI_Receive_DMA(&hsai_BlockB2, (uint8_t*)PCM_ChannelBuf[3], PCM_TWO_SAMPLE_NUM);
 #endif
 }
 

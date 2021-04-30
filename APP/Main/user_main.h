@@ -30,7 +30,6 @@ extern "C" {
 #include "I2S_Port.h"
 #include "Timer_Port.h"
 #include "DFSDM_Port.h"
-#include "DAC_Port.h"
 /** Private defines ----------------------------------------------------------*/
 
 /** Exported typedefines -----------------------------------------------------*/
@@ -49,6 +48,8 @@ void User_Main_Task_Init(void);
 void User_Main_Task_Process_Loop(void);
 /*播放音频任务处理*/
 void User_Main_PlayTask_Process_Loop(void);
+/*存储来自音频设备数据*/
+void User_Audio_Channel_Data_Save(uint16_t *data, uint32_t len);
 
 #ifdef __cplusplus ///<end extern c
 }

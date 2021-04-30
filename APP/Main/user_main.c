@@ -46,9 +46,17 @@ extern "C" {
 /** Private constants --------------------------------------------------------*/
 /** Public variables ---------------------------------------------------------*/
 /** Private variables --------------------------------------------------------*/
+static int16_t audiodatainputbuf[STEREO_FRAME_SIZE] = {0};
+static int16_t audiodataoutputbuf[STEREO_FRAME_SIZE] = {0};
+static int16_t OneChannel_Data[MONO_FRAME_SIZE] = {0};
+/*算法运算源数据缓冲区*/
+static float Algorithm_Source_Data[MONO_FRAME_SIZE] = {0};
+
+static int16_t Algorithm_Result_Data[MONO_FRAME_SIZE] = {0};
 
 /** Private function prototypes ----------------------------------------------*/
-
+static void Algorithm_Process_Start(void);/**< 算法任务处理启动*/
+static void Algorithm_Function_Select(int16_t *source_data);
 /** Private user code --------------------------------------------------------*/
 
 /** Private application code -------------------------------------------------*/
@@ -58,6 +66,148 @@ extern "C" {
 *
 ********************************************************************************
 */
+
+/**
+  ******************************************************************
+  * @brief   算法功能选择
+  * @param   [in]source_data 原始采集数据
+  * @return  None.
+  * @author  aron566
+  * @version V1.0
+  * @date    2020-01-11
+  ******************************************************************
+  */
+static void Algorithm_Function_Select(int16_t *source_data)
+{
+//  switch(g_Algorithm_Func_Select)
+//  {
+//    case RNN_NOISE_FUNC:
+//      Algorithm_RNN(source_data, Algorithm_Result_Data);
+//      break;
+//    case MASK_EMD_FUNC:
+//      Algorithm_MASK_EMD(Algorithm_Source_Data, Algorithm_Result_Data);
+//      break;
+//    case MASK_EMD_WDRC_FUNC:
+//      Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
+//      break;
+//    case VOL_FUNC:
+//      Algorithm_VOL(source_data, Algorithm_Result_Data);
+//      break;
+//    case AGC_FUNC:
+//      Algorithm_AGC(source_data, Algorithm_Result_Data);
+//      break;
+//    case FUNCTON_MAX:
+//      {
+//        Algorithm_RNN(source_data, Algorithm_Result_Data);
+//        
+//        INT16_ARRAY2FLOAT32(Algorithm_Source_Data, Algorithm_Result_Data, MONO_FRAME_SIZE);
+//        
+//        Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
+//        Algorithm_VOL(Algorithm_Result_Data, Algorithm_Result_Data);
+//        Algorithm_AGC(Algorithm_Result_Data, Algorithm_Result_Data);
+//      }
+//      break;
+//    default:
+//      break;
+//  }
+//  
+//  INT16_ARRAY_CROSS_JOIN(audiodataoutputbuf, Algorithm_Result_Data, STEREO_FRAME_SIZE);
+
+//  Sai_Port_Send_Data((uint8_t *)audiodataoutputbuf, STEREO_FRAME_SIZE);
+  
+  /*更新USB音频数据*/
+//  for(int i = 0; i < MONO_FRAME_SIZE; i++)
+//  {
+//    g_UACRingBuf[g_UACWriteIndex] = source_data[i];
+//    g_UACWriteIndex++;
+//    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
+//    {
+//      g_UACWriteIndex = 0;
+//    }
+//    
+//    g_UACRingBuf[g_UACWriteIndex] = Algorithm_Result_Data[i];
+//    g_UACWriteIndex++;
+
+//    if(g_UACWriteIndex >= UAC_BUFFER_SIZE)
+//    {
+//      g_UACWriteIndex = 0;
+//    }
+//  }
+}
+
+static void Algorithm_Old_Process_Start(void)
+{
+//  extern volatile uint8_t SAI_Transmit_Complete_Flag;
+//  extern volatile uint8_t SAI_Receive_Complete_Flag;
+//  extern volatile uint8_t SAI_Can_Send_Data_Flag;
+//  extern volatile uint16_t SAI_RX_Buf_0[STEREO_FRAME_SIZE];
+//  extern volatile uint16_t SAI_RX_Buf_1[STEREO_FRAME_SIZE];
+//  if(SAI_Can_Send_Data_Flag == 1)
+//  {
+//    SAI_Can_Send_Data_Flag = 0;
+//    
+//    /*拷贝RXx*/
+//    if(SAI_Receive_Complete_Flag == 0)
+//    {
+//      memcpy((void *)audiodatainputbuf, (void *)SAI_RX_Buf_0, sizeof(int16_t)*STEREO_FRAME_SIZE);
+//    }
+//    if(SAI_Receive_Complete_Flag == 1)
+//    {
+//      memcpy((void *)audiodatainputbuf, (void *)SAI_RX_Buf_1, sizeof(int16_t)*STEREO_FRAME_SIZE);
+//    }
+//    
+//    /*分离通道数据：L-R-L-R-L-R......*/
+//    for(int i = 0; i < MONO_FRAME_SIZE; i++)
+//    {
+//      OneChannel_Data[i] = audiodatainputbuf[i*2];
+//      Algorithm_Source_Data[i] = (float)audiodatainputbuf[i*2];
+//  //    temp_data_right[i] = temp_buf[i*2+1];
+//    }    
+ 
+//    switch(g_Algorithm_Func_Select)
+//    {
+//      case RNN_NOISE_FUNC:
+//        Algorithm_RNN(OneChannel_Data, Algorithm_Result_Data);
+//        break;
+//      case MASK_EMD_FUNC:
+//        Algorithm_MASK_EMD(Algorithm_Source_Data, Algorithm_Result_Data);
+//        break;
+//      case MASK_EMD_WDRC_FUNC:
+//        Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
+//        break;
+//      case VOL_FUNC:
+//        Algorithm_VOL(OneChannel_Data, Algorithm_Result_Data);
+//        break;
+//      case AGC_FUNC:
+//        Algorithm_AGC(OneChannel_Data, Algorithm_Result_Data);
+//        break;
+//      case FUNCTON_MAX:
+//        {
+//          Algorithm_RNN(OneChannel_Data, Algorithm_Result_Data);
+//          
+//          INT16_ARRAY2FLOAT32(Algorithm_Source_Data, Algorithm_Result_Data, MONO_FRAME_SIZE);
+//          
+//          Algorithm_MASK_EMD_WDRC(Algorithm_Source_Data, Algorithm_Result_Data);
+//          Algorithm_VOL(Algorithm_Result_Data, Algorithm_Result_Data);
+//          Algorithm_AGC(Algorithm_Result_Data, Algorithm_Result_Data);
+//        }
+//        break;
+//      default:
+//        break;
+//    }
+
+//    INT16_ARRAY_CROSS_JOIN(audiodataoutputbuf, Algorithm_Result_Data, STEREO_FRAME_SIZE);
+
+//    if(SAI_Transmit_Complete_Flag == 0)
+//    {
+//      memcpy((void *)SAI_TX_Buf_0, (void *)audiodataoutputbuf, sizeof(int16_t)*STEREO_FRAME_SIZE);
+//    }
+//    else if(SAI_Transmit_Complete_Flag == 1)
+//    {
+//      memcpy((void *)SAI_TX_Buf_1, (void *)audiodataoutputbuf, sizeof(int16_t)*STEREO_FRAME_SIZE);
+//    }	
+//  }
+}
 
 /** Public application code --------------------------------------------------*/
 /*******************************************************************************
@@ -96,6 +246,9 @@ void User_Main_Task_Process_Loop(void)
 {
   for(;;)
   {
+//    Algorithm_Old_Process_Start();
+    
+//    User_Main_PlayTask_Process_Loop();
 //    DFSDM_Port_Start();
     
     Sai_Port_Start();
@@ -132,9 +285,6 @@ void User_Main_Task_Init(void)
   
   /*I2S初始化*/
   I2S_Port_Init();
-  
-  /*DAC初始化*/
-  //DAC_Port_Init();
   /*other initialization task code*/
 }
 

@@ -34,7 +34,7 @@ extern "C" {
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 
-/*PDMæµè½¬æ¢PCMæ•°æ®æµæ¥å£*/
+/*PDMÁ÷×ª»»PCMÊı¾İÁ÷½Ó¿Ú*/
 uint8_t PDM_To_PCM_Stream(uint16_t *PDMBuf, uint16_t *PCMBuf);
 
 #ifdef __cplusplus ///<end extern c

@@ -1,11 +1,11 @@
 /**
  *  @file DAC_Port.h
  *
- *  @date 2021-03-11
+ *  @date 2021-01-15
  *
  *  @author aron566
  *
- *  @brief DACæ“ä½œæ¥å£
+ *  @brief DAC²Ù×÷½Ó¿Ú
  *  
  *  @version V1.0
  */
@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 /** Includes -----------------------------------------------------------------*/
-#include <stdint.h> /**< need definition of uint8_t */
+#include <stdint.h> /**< nedd definition of uint8_t */
 #include <stddef.h> /**< need definition of NULL    */
 #include <stdbool.h>/**< need definition of BOOL    */
 #include <stdio.h>  /**< if need printf             */
@@ -34,8 +34,12 @@ extern "C" {
 /** Exported variables -------------------------------------------------------*/
 /** Exported functions prototypes --------------------------------------------*/
 
-/*DACåˆå§‹åŒ–*/
+/*DAC³õÊ¼»¯*/
 void DAC_Port_Init(void);
+/*DACÉèÖÃÊä³öãĞÖµ*/
+float DAC_Port_Set_OutMax(int16_t limit_val);
+/*DACÊä³ö*/
+void DAC_Port_Set_Vol(int16_t *pData, uint32_t Length);
 
 #ifdef __cplusplus ///<end extern c
 }
