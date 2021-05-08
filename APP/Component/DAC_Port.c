@@ -20,7 +20,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 #include "DAC_Port.h"
 #include "main.h"
-#include "CS43L12_Driver.h"
+#include "CS43L21_Driver.h"
 #include "SAI_port.h"
 /** Private typedef ----------------------------------------------------------*/
 
@@ -64,7 +64,7 @@ extern "C" {
 void DAC_Port_Init(void)
 {
   /*初始化CS43L12设备*/
-  CS43L12_Driver_Init();
+  CS43L21_Driver_Init();
   
   /*SAI发送启动*/
   Sai_Port_Init();

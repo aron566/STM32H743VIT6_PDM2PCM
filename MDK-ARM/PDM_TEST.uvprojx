@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -686,9 +686,9 @@
           <GroupName>USER/Driver</GroupName>
           <Files>
             <File>
-              <FileName>CS43L12_Driver.c</FileName>
+              <FileName>CS43L21_Driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Drivers\USER_Driver\CS43L12_Driver.c</FilePath>
+              <FilePath>..\Drivers\USER_Driver\CS43L21_Driver.c</FilePath>
             </File>
           </Files>
         </Group>

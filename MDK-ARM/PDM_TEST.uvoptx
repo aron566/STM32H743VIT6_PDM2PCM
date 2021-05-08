@@ -235,7 +235,7 @@
 
   <Group>
     <GroupName>Application/MDK-ARM</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -710,8 +710,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Drivers\USER_Driver\CS43L12_Driver.c</PathWithFileName>
-      <FilenameWithoutPath>CS43L12_Driver.c</FilenameWithoutPath>
+      <PathWithFileName>..\Drivers\USER_Driver\CS43L21_Driver.c</PathWithFileName>
+      <FilenameWithoutPath>CS43L21_Driver.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -831,7 +831,7 @@
 
   <Group>
     <GroupName>USB_Core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -875,7 +875,7 @@
 
   <Group>
     <GroupName>USB_Driver</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
